@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Untagged on Duffie Cooley</title>
+    <link>https://mauilion.github.io/tags/untagged/</link>
+    <description>Recent content in Untagged on Duffie Cooley</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Mon, 18 Mar 2019 16:25:23 -0700</lastBuildDate>
+    
+	<atom:link href="https://mauilion.github.io/tags/untagged/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>First</title>
+      <link>https://mauilion.github.io/posts/first/</link>
+      <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
+      
+      <guid>https://mauilion.github.io/posts/first/</guid>
+      <description>&lt;p&gt;This is a test post&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
