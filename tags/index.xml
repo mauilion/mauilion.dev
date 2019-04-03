@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Duffie Cooley</title>
-    <link>https://o0o.dev/tags/</link>
+    <link>https://mauilion.dev/tags/</link>
     <description>Recent content in Tags on Duffie Cooley</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     
-	<atom:link href="https://o0o.dev/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://mauilion.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Untagged</title>
-      <link>https://o0o.dev/tags/untagged/</link>
+      <link>https://mauilion.dev/tags/untagged/</link>
       <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
       
-      <guid>https://o0o.dev/tags/untagged/</guid>
+      <guid>https://mauilion.dev/tags/untagged/</guid>
       <description></description>
     </item>
     
