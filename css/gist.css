@@ -1,0 +1,82 @@
+/* Gist Embed - Dark Theme Styling - Thanks to MattD */
+  
+/* Body */
+.gist-data tbody { background-color: #494f5c !important; }
+
+/* Line Numbers */
+.gist-data tbody td:nth-of-type(1) {
+  color: black !important;
+}
+
+/* Code */
+.gist-data tbody td:nth-of-type(2){
+  color: white !important;
+}
+
+/* Comments */
+.pl-c
+{
+  color: white !important;
+}
+
+/* Function */
+.pl-k, tbody tr:first-child .blob-code, tbody tr:last-child .blob-code
+{
+  color: white !important;
+}
+
+/* Function Name */
+.pl-en
+{
+  color: #ffffff !important;
+}
+
+.pl-ent
+{
+  color: white !important;
+}
+
+/* Function Method */
+.pl-c1
+{
+  color: #ffffff !important;
+}
+/* "'s around Strings */
+.pl-pds
+{
+  color: white !important;
+}
+
+/* Strings */
+.pl-s
+{
+  color: white !important;
+}
+
+/* 2018 edits */
+.gist .gist-meta {
+    background-color: #c6cddb !important;
+    color: white !important;
+}
+
+.gist .gist-data {
+    background-color: white !important;
+    border-bottom: 1px solid #171616 !important;
+}
+
+.gist .gist-file {
+    border: 0px solid #171616 !important;
+    border-bottom: 1px solid #191919 !important;
+}
+
+.gist .blob-num {
+    background: #c6cddb !important;
+}
+
+.gist .blob-code {
+    background: #494f5c !important;
+}
+
+.gist .highlight {
+    background: #000000 !important;
+}

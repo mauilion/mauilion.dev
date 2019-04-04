@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://mauilion.dev/posts/first/</loc>
+    <loc>https://mauilion.dev/posts/etcdclient/</loc>
     <lastmod>2019-03-18T16:25:23-07:00</lastmod>
   </url>
   
@@ -19,6 +19,12 @@
   </url>
   
   <url>
+    <loc>https://mauilion.dev/tags/etcd/</loc>
+    <lastmod>2019-03-18T16:25:23-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://mauilion.dev/posts/</loc>
     <lastmod>2019-03-18T16:25:23-07:00</lastmod>
     <priority>0</priority>
@@ -26,11 +32,6 @@
   
   <url>
     <loc>https://mauilion.dev/tags/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mauilion.dev/tags/untagged/</loc>
     <lastmod>2019-03-18T16:25:23-07:00</lastmod>
     <priority>0</priority>
   </url>

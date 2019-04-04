@@ -11,18 +11,56 @@
 		<atom:link href="https://mauilion.dev/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
-			<title>First</title>
-			<link>https://mauilion.dev/posts/first/</link>
+			<title>a static pod manifest that exposes an preconfigure etcdclient</title>
+			<link>https://mauilion.dev/posts/etcdclient/</link>
 			<pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
 			
-			<guid>https://mauilion.dev/posts/first/</guid>
-			<description>&lt;p&gt;This is a test post&lt;/p&gt;</description>
-			<content type="html"><![CDATA[<p>This is a test post</p>
+			<guid>https://mauilion.dev/posts/etcdclient/</guid>
+			<description>&lt;p&gt;In this post I am going to discuss &lt;a href=&#34;https://git.io/etcdclient.yaml&#34; rel=&#34;nofollow noreferrer&#34; target=&#34;_blank&#34;&gt;git.io/etcdclient.yaml&lt;/a&gt; and why it&amp;rsquo;s neat!&lt;/p&gt;</description>
+			<content type="html"><![CDATA[<p>In this post I am going to discuss <a href="https://git.io/etcdclient.yaml" rel="nofollow noreferrer" target="_blank">git.io/etcdclient.yaml</a> and why it&rsquo;s neat!</p>
 
-<p>Other <code>stuff</code></p>
+<p>When putting together content for a series of blog posts that I am doing around etcd recovery and failure scenarios, I realized that I was configuring the etcdclient to interact with the etcd cluster that kubeadm stands up.</p>
 
-<p>Some sweet syntax highlighting:</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">#this is a test</span></code></pre></div>]]></content>
+<p><a href="https://git.io/etcdclient.yaml" rel="nofollow noreferrer" target="_blank">git.io/etcdclient.yaml</a> is an attempt to DRY (do not repeat yourself) work up.</p>
+
+<p>It makes a set of assumptions.</p>
+
+<ol>
+<li>That etcd has been created by kubeadm as a <code>local etcd</code></li>
+<li>That we have well defined locations for certs on the underlying file system layed down by kubeadm.</li>
+<li>That etcd is listening on localhost and a node ip or for our purposes at the very least localhost.</li>
+</ol>
+
+<p>The static pod looks like:</p>
+
+<script type="application/javascript" src="//gist.github.com/mauilion/2bab4b00eb7a0ab4fca7023ae251e8ee.js"></script>
+
+<p>The interesting bits are the env vars that configure etcdclient on your behalf.</p>
+
+<p>With etcd and etcdclient the arguments that you can pass at the cli are also <a href="https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/configuration.md" rel="nofollow noreferrer" target="_blank">exposed as environment variables</a>.</p>
+
+<p>Now to see it in action!</p>
+
+<p>
+    <asciinema-player
+        src="/casts/etcdclient.cast"
+        cols="640"
+        rows="30"
+        
+        preload="1"
+        
+        start-at="0"
+        speed="1"
+        
+        
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>]]></content>
 		</item>
 		
 	</channel>
