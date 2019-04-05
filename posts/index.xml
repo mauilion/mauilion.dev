@@ -21,6 +21,8 @@
 
 <p>When putting together content for a series of blog posts that I am doing around etcd recovery and failure scenarios, I realized that I was configuring the etcdclient to interact with the etcd cluster that kubeadm stands up.</p>
 
+<p>I wanted to create a static pod that would sit on the same node as the static pod that operates the etcd server so that I can use it to troubleshoot the etcd cluster that kubeadm is bringing up.</p>
+
 <p><a href="https://git.io/etcdclient.yaml" rel="nofollow noreferrer" target="_blank">git.io/etcdclient.yaml</a> is an attempt to DRY (do not repeat yourself) work up.</p>
 
 <p>It makes a set of assumptions.</p>
