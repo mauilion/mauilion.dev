@@ -3,13 +3,38 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://mauilion.dev/posts/etcdclient/</loc>
-    <lastmod>2019-03-18T16:25:23-07:00</lastmod>
+    <loc>https://mauilion.dev/</loc>
+    <lastmod>2019-04-10T15:28:10-07:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://mauilion.dev/about/</loc>
-    <lastmod>2019-03-18T16:23:27-07:00</lastmod>
+    <loc>https://mauilion.dev/posts/</loc>
+    <lastmod>2019-04-10T15:28:10-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/posts/kind-demo/</loc>
+    <lastmod>2019-04-10T15:28:10-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/tags/</loc>
+    <lastmod>2019-04-10T15:28:10-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/tags/kind/</loc>
+    <lastmod>2019-04-10T15:28:10-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/tags/talks/</loc>
+    <lastmod>2019-04-10T15:28:10-07:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -19,9 +44,8 @@
   </url>
   
   <url>
-    <loc>https://mauilion.dev/</loc>
+    <loc>https://mauilion.dev/posts/etcdclient/</loc>
     <lastmod>2019-03-18T16:25:23-07:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -31,21 +55,14 @@
   </url>
   
   <url>
-    <loc>https://mauilion.dev/posts/</loc>
-    <lastmod>2019-03-18T16:25:23-07:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mauilion.dev/tags/</loc>
-    <lastmod>2019-03-18T16:25:23-07:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://mauilion.dev/tags/tools/</loc>
     <lastmod>2019-03-18T16:25:23-07:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/about/</loc>
+    <lastmod>2019-03-18T16:23:27-07:00</lastmod>
   </url>
   
 </urlset>

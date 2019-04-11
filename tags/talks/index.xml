@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>talks on Duffie Cooley</title>
+    <link>https://mauilion.dev/tags/talks/</link>
+    <description>Recent content in talks on Duffie Cooley</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 10 Apr 2019 15:28:10 -0700</lastBuildDate>
+    
+	<atom:link href="https://mauilion.dev/tags/talks/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Presenting to the San Francisco Kubernetes Meetup about kind!&#34;</title>
+      <link>https://mauilion.dev/posts/kind-demo/</link>
+      <pubDate>Wed, 10 Apr 2019 15:28:10 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/posts/kind-demo/</guid>
+      <description>On 4/7/2019 I had the opportunity to talk to folks that attended the SF Kubernetes meetup Anaplan about kind!
+It&amp;rsquo;s a great project and I end up using kind everyday to validate or develop designs for Kubernetes clusters.
+The slides that I presented are here: mauilion.github.io/kind-demo and a link to the repository with the deck and the content used to bring up the demo cluster is here: github.com/mauilion/kind-demo
+
+In the talk I dug in a bit about what kind and kubeadm are and what problems they solve.</description>
+    </item>
+    
+  </channel>
+</rss>

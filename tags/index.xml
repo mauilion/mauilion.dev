@@ -7,13 +7,31 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 18 Mar 2019 16:25:23 -0700</lastBuildDate>
+    <lastBuildDate>Wed, 10 Apr 2019 15:28:10 -0700</lastBuildDate>
     
 	<atom:link href="https://mauilion.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Debugging</title>
+      <title>kind</title>
+      <link>https://mauilion.dev/tags/kind/</link>
+      <pubDate>Wed, 10 Apr 2019 15:28:10 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/tags/kind/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>talks</title>
+      <link>https://mauilion.dev/tags/talks/</link>
+      <pubDate>Wed, 10 Apr 2019 15:28:10 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/tags/talks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>debugging</title>
       <link>https://mauilion.dev/tags/debugging/</link>
       <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
       
@@ -22,7 +40,7 @@
     </item>
     
     <item>
-      <title>Etcd</title>
+      <title>etcd</title>
       <link>https://mauilion.dev/tags/etcd/</link>
       <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
       
@@ -31,7 +49,7 @@
     </item>
     
     <item>
-      <title>Tools</title>
+      <title>tools</title>
       <link>https://mauilion.dev/tags/tools/</link>
       <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
       
