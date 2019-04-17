@@ -18,7 +18,7 @@
       <pubDate>Wed, 17 Apr 2019 10:44:33 -0700</pubDate>
       
       <guid>https://mauilion.dev/posts/kind-metallb/</guid>
-      <description>Preamble: When using metallb with king we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.</description>
+      <description>Preamble: When using metallb with kind we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.</description>
     </item>
     
   </channel>

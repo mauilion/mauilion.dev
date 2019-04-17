@@ -9,7 +9,7 @@
 	<meta name="msapplication-TileColor" content="#ababab">
 
 <meta itemprop="name" content="Using MetalLb with Kind">
-<meta itemprop="description" content="Preamble: When using metallb with king we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.">
+<meta itemprop="description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.">
 
 
 <meta itemprop="datePublished" content="2019-04-17T10:44:33-07:00" />
@@ -22,7 +22,7 @@
 
 <meta itemprop="keywords" content="metallb,kind,tutorial," />
 <meta property="og:title" content="Using MetalLb with Kind" />
-<meta property="og:description" content="Preamble: When using metallb with king we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster." />
+<meta property="og:description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://mauilion.dev/posts/kind-metallb/" />
 
@@ -33,7 +33,7 @@
 <meta name="twitter:image" content="https://github.com/danderson/metallb/blob/master/website/static/images/logo.png"/>
 
 <meta name="twitter:title" content="Using MetalLb with Kind"/>
-<meta name="twitter:description" content="Preamble: When using metallb with king we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster."/>
+<meta name="twitter:description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster."/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -86,7 +86,7 @@
 
 <h3 id="preamble">Preamble:<a href="#preamble" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 
-<p>When using metallb with king we are going to deploy it in <code>l2-mode</code> This means that we need to be able to connect to the ip addresses of the node subnet.
+<p>When using metallb with kind we are going to deploy it in <code>l2-mode</code> This means that we need to be able to connect to the ip addresses of the node subnet.
 If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it.
 If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.</p>
 
@@ -96,7 +96,7 @@ If you are using linux to host a kind cluster. You will not need to do this as t
 
 <p>This mechanism is used to expose services inside the cluster using an external Load Balancing mechansim that understands how to route traffic down to the pods defined by that service.</p>
 
-<p>Most implementations of this are relatively naive. They place all of the available nodes behing the load balancer and use tcp port knocking to determine if the node is &ldquo;healthy&rdquo; enough to forward traffic to it.</p>
+<p>Most implementations of this are relatively naive. They place all of the available nodes behind the load balancer and use tcp port knocking to determine if the node is &ldquo;healthy&rdquo; enough to forward traffic to it.</p>
 
 <p>With Metallb there are a different set of assumptions.</p>
 
@@ -125,7 +125,7 @@ If you are using linux to host a kind cluster. You will not need to do this as t
         start-at="0"
         speed="1"
         
-        
+        poster="#ZgotmplZ"
         
         
         
