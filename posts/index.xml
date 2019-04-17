@@ -32,7 +32,7 @@ If you are using linux to host a kind cluster. You will not need to do this as t
 
 <p>Most implementations of this are relatively naive. They place all of the available nodes behing the load balancer and use tcp port knocking to determine if the node is &ldquo;healthy&rdquo; enough to forward traffic to it.</p>
 
-<p>With Metallb there is a different set of assumptions.</p>
+<p>With Metallb there are a different set of assumptions.</p>
 
 <p>Metallb can operate in two distinct modes.</p>
 
@@ -230,6 +230,8 @@ If you are using linux to host a kind cluster. You will not need to do this as t
 <p>And we can curl it!</p>
 
 <p>That&rsquo;s all for now hit me up on <a href="https://twitter.com/mauilion" rel="nofollow noreferrer" target="_blank">twitter</a> or <a href="https://kubernetes.slack.com/team/U37TLLWAU" rel="nofollow noreferrer" target="_blank">k8s slack</a> with questions!</p>
+
+<p>Shout-out to Jan Guth for the idea on this post!</p>
 ]]></content>
 		</item>
 		
