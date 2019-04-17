@@ -15,12 +15,12 @@
 			<pubDate>Wed, 17 Apr 2019 10:44:33 -0700</pubDate>
 			
 			<guid>https://mauilion.dev/posts/kind-metallb/</guid>
-			<description>Preamble: When using metallb with kind we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.</description>
+			<description>Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.</description>
 			<content type="html"><![CDATA[
 
 <h3 id="preamble">Preamble:</h3>
 
-<p>When using metallb with kind we are going to deploy it in <code>l2-mode</code> This means that we need to be able to connect to the ip addresses of the node subnet.
+<p>When using metallb with kind we are going to deploy it in <code>l2-mode</code>. This means that we need to be able to connect to the ip addresses of the node subnet.
 If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it.
 If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.</p>
 
@@ -43,33 +43,6 @@ If you are using linux to host a kind cluster. You will not need to do this as t
 <p>the bgp mode relies on ecmp to balance traffic back to the pods. ECMP is a great solution for this problem and I HIGHLY recommend you use this model if you can.</p>
 
 <p>That said I haven&rsquo;t created a bgp router for my kind cluster so we wil use the l2-mode for this experiment.</p>
-
-<p>First let&rsquo;s create a service of type loadbalancer and see what happens before we install metallb.</p>
-
-<p>I am going to use the echo server for this. I prefer the one built by inanimate. Here is the <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">source</a> and image: <code>inanimate/echo-server</code></p>
-
-<p>
-    <asciinema-player
-        src="/casts/km-echo1.cast"
-        cols="640"
-        rows="30"
-        
-        preload="1"
-        
-        start-at="0"
-        speed="1"
-        
-        poster="#ZgotmplZ"
-        
-        
-        
-        
-        
-        
-    ></asciinema-player>
-</p>
-
-<p>We can see that the <code>EXTERNAL-IP</code> field is <code>pending</code>. This is because there is nothing available in the cluster to manage this type of service.</p>
 
 <h3 id="let-s-do-this-thing">Let&rsquo;s do this thing!</h3>
 
@@ -151,6 +124,35 @@ If you are using linux to host a kind cluster. You will not need to do this as t
 <p>So we can see that there is an allocated network of <code>172.17.0.0/16</code> in my case.</p>
 
 <p>Let&rsquo;s swipe the last 10 ip addresses from that allocation and use them for the metallb configuration.</p>
+
+<h3 id="now-we-are-going-to-deploy-a-service">Now we are going to deploy a service!</h3>
+
+<p>First let&rsquo;s create a service of type loadbalancer and see what happens before we install metallb.</p>
+
+<p>I am going to use the echo server for this. I prefer the one built by inanimate. Here is the <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">source</a> and image: <code>inanimate/echo-server</code></p>
+
+<p>
+    <asciinema-player
+        src="/casts/km-echo1.cast"
+        cols="640"
+        rows="30"
+        
+        preload="1"
+        
+        start-at="0"
+        speed="1"
+        
+        
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>We can see that the <code>EXTERNAL-IP</code> field is <code>pending</code>. This is because there is nothing available in the cluster to manage this type of service.</p>
 
 <h3 id="now-on-to-the-metallb-part">Now on to the metallb part!</h3>
 
