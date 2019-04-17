@@ -6,8 +6,232 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 10 Apr 2019 15:28:10 -0700</lastBuildDate>
+		<lastBuildDate>Wed, 17 Apr 2019 10:44:33 -0700</lastBuildDate>
 		<atom:link href="https://mauilion.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Using MetalLb with Kind</title>
+			<link>https://mauilion.dev/posts/kind-metallb/</link>
+			<pubDate>Wed, 17 Apr 2019 10:44:33 -0700</pubDate>
+			
+			<guid>https://mauilion.dev/posts/kind-metallb/</guid>
+			<description>Preamble: When using metallb with king we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.</description>
+			<content type="html"><![CDATA[
+
+<h3 id="preamble">Preamble:</h3>
+
+<p>When using metallb with king we are going to deploy it in <code>l2-mode</code> This means that we need to be able to connect to the ip addresses of the node subnet.
+If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it.
+If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.</p>
+
+<h3 id="problem-statement">Problem Statement:</h3>
+
+<p>Kubernetes on bare metal doesn&rsquo;t come with an easy integration for things like services of type LoadBalancer.</p>
+
+<p>This mechanism is used to expose services inside the cluster using an external Load Balancing mechansim that understands how to route traffic down to the pods defined by that service.</p>
+
+<p>Most implementations of this are relatively naive. They place all of the available nodes behing the load balancer and use tcp port knocking to determine if the node is &ldquo;healthy&rdquo; enough to forward traffic to it.</p>
+
+<p>With Metallb there is a different set of assumptions.</p>
+
+<p>Metallb can operate in two distinct modes.</p>
+
+<p>A Layer 2 mode that will use vrrp to arp out for the external ip or VIP on the lan.</p>
+
+<p>A bgp mode that will announce the external ip or VIP from all of the nodes where at least one pod is running.</p>
+
+<p>the bgp mode relies on ecmp to balance traffic back to the pods. ECMP is a great solution for this problem and I HIGHLY recommend you use this model if you can.</p>
+
+<p>That said I haven&rsquo;t created a bgp router for my kind cluster so we wil use the l2-mode for this experiment.</p>
+
+<p>First let&rsquo;s create a service of type loadbalancer and see what happens before we install metallb.</p>
+
+<p>I am going to use the echo server for this. I prefer the one built by inanimate. Here is the <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">source</a> and image: <code>inanimate/echo-server</code></p>
+
+<p>
+    <asciinema-player
+        src="/casts/km-echo1.cast"
+        cols="640"
+        rows="30"
+        
+        preload="1"
+        
+        start-at="0"
+        speed="1"
+        
+        
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>We can see that the <code>EXTERNAL-IP</code> field is <code>pending</code>. This is because there is nothing available in the cluster to manage this type of service.</p>
+
+<h3 id="let-s-do-this-thing">Let&rsquo;s do this thing!</h3>
+
+<p>First let&rsquo;s bring up a 2 node kind cluster with the following config.</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">kind<span class="p">:</span><span class="w"> </span>Cluster<span class="w">
+</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span>kind.sigs.k8s.io/v1alpha3<span class="w">
+</span><span class="w"></span>nodes<span class="p">:</span><span class="w">
+</span><span class="w"></span>-<span class="w"> </span>role<span class="p">:</span><span class="w"> </span>control-plane<span class="w">
+</span><span class="w"></span>-<span class="w"> </span>role<span class="p">:</span><span class="w"> </span>worker</code></pre></div>
+<p>
+    <asciinema-player
+        src="/casts/km-bringup.cast"
+        cols="640"
+        rows="30"
+        
+        preload="1"
+        
+        start-at="0"
+        speed="1"
+        
+        
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>Then we need to see if we can ping the node ip of the nodes themselves.</p>
+
+<p>
+    <asciinema-player
+        src="/casts/km-ping.cast"
+        cols="640"
+        rows="30"
+        
+        preload="1"
+        
+        start-at="0"
+        speed="1"
+        
+        
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>At this point we need to determine the network that is being used for the node ip pool. Since kind nodes are associated with the docker network named &ldquo;bridge&rdquo; we can inspect that directly.</p>
+
+<p>I am using a pretty neat tool called <a href="https://github.com/simeji/jid" rel="nofollow noreferrer" target="_blank"><code>jid</code></a> here that is a repl for json.</p>
+
+<p>
+    <asciinema-player
+        src="/casts/km-inspect.cast"
+        cols="640"
+        rows="30"
+        
+        preload="1"
+        
+        start-at="0"
+        speed="1"
+        
+        
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>So we can see that there is an allocated network of <code>172.17.0.0/16</code> in my case.</p>
+
+<p>Let&rsquo;s swipe the last 10 ip addresses from that allocation and use them for the metallb configuration.</p>
+
+<h3 id="now-on-to-the-metallb-part">Now on to the metallb part!</h3>
+
+<p>First read the docs <a href="https://metallb.universe.tf/installation/" rel="nofollow noreferrer" target="_blank">https://metallb.universe.tf/installation/</a></p>
+
+<p>Then we can get started on installing this to our cluster.</p>
+
+<p>
+    <asciinema-player
+        src="/casts/km-metallb-install.cast"
+        cols="640"
+        rows="30"
+        
+        preload="1"
+        
+        start-at="0"
+        speed="1"
+        
+        
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>We can see that metallb is now installed but we aren&rsquo;t done yet!</p>
+
+<p>now we need to add a configuration that will use a few of the unused ip addresses from the node ip pool (<code>172.17.0.0/16</code>)</p>
+
+<p>Now if we look at our existing service we can see that the <code>EXTERNAL-IP</code> is still <code>pending</code></p>
+
+<p>This is because we haven&rsquo;t yet applied the config for metallb.</p>
+
+<p>Here is the config:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>ConfigMap<span class="w">
+</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
+</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>metallb-system<span class="w">
+</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>config<span class="w">
+</span><span class="w"></span>data<span class="p">:</span><span class="w">
+</span><span class="w">  </span>config<span class="p">:</span><span class="w"> </span><span class="sd">|
+</span><span class="sd">    address-pools:</span><span class="w">
+</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>default<span class="w">
+</span><span class="w">      </span>protocol<span class="p">:</span><span class="w"> </span>layer2<span class="w">
+</span><span class="w">      </span>addresses<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="m">172.17</span>.<span class="m">255.1</span>-<span class="m">172.17</span>.<span class="m">255.250</span></code></pre></div>
+<p>You can apply this to your cluster with <code>kubectl apply -f https://git.io/km-config.yaml</code></p>
+
+<p>Let&rsquo;s see what happens when we apply this.</p>
+
+<p>
+    <asciinema-player
+        src="/casts/km-config.cast"
+        cols="640"
+        rows="28"
+        
+        preload="1"
+        
+        start-at="0"
+        speed="1"
+        
+        
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>We can see the svc get&rsquo;s an ip address immediatly.</p>
+
+<p>And we can curl it!</p>
+
+<p>That&rsquo;s all for now hit me up on <a href="https://twitter.com/mauilion" rel="nofollow noreferrer" target="_blank">twitter</a> or <a href="https://kubernetes.slack.com/team/U37TLLWAU" rel="nofollow noreferrer" target="_blank">k8s slack</a> with questions!</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Presenting to the San Francisco Kubernetes Meetup about kind!&#34;</title>

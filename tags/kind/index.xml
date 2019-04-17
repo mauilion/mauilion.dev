@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 10 Apr 2019 15:28:10 -0700</lastBuildDate>
+    <lastBuildDate>Wed, 17 Apr 2019 10:44:33 -0700</lastBuildDate>
     
 	<atom:link href="https://mauilion.dev/tags/kind/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using MetalLb with Kind</title>
+      <link>https://mauilion.dev/posts/kind-metallb/</link>
+      <pubDate>Wed, 17 Apr 2019 10:44:33 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/posts/kind-metallb/</guid>
+      <description>Preamble: When using metallb with king we are going to deploy it in l2-mode This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.</description>
+    </item>
     
     <item>
       <title>Presenting to the San Francisco Kubernetes Meetup about kind!&#34;</title>

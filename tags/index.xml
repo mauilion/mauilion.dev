@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 10 Apr 2019 15:28:10 -0700</lastBuildDate>
+    <lastBuildDate>Wed, 17 Apr 2019 10:44:33 -0700</lastBuildDate>
     
 	<atom:link href="https://mauilion.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,27 @@
     <item>
       <title>kind</title>
       <link>https://mauilion.dev/tags/kind/</link>
-      <pubDate>Wed, 10 Apr 2019 15:28:10 -0700</pubDate>
+      <pubDate>Wed, 17 Apr 2019 10:44:33 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/kind/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>metallb</title>
+      <link>https://mauilion.dev/tags/metallb/</link>
+      <pubDate>Wed, 17 Apr 2019 10:44:33 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/tags/metallb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tutorial</title>
+      <link>https://mauilion.dev/tags/tutorial/</link>
+      <pubDate>Wed, 17 Apr 2019 10:44:33 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/tags/tutorial/</guid>
       <description></description>
     </item>
     
