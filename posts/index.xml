@@ -32,13 +32,34 @@ If you are using linux to host a kind cluster. You will not need to do this as t
 
 <p>Most implementations of this are relatively naive. They place all of the available nodes behind the load balancer and use tcp port knocking to determine if the node is &ldquo;healthy&rdquo; enough to forward traffic to it.</p>
 
+<p>You can define an <code>externalTrafficPolicy</code> on a service of type <code>LoadBalancer</code> and this can help get the behaviour that you want. From the docs:</p>
+
+<pre><code>$ kubectl explain service.spec.externalTrafficPolicy
+KIND:     Service
+VERSION:  v1
+
+FIELD:    externalTrafficPolicy &lt;string&gt;
+
+DESCRIPTION:
+     externalTrafficPolicy denotes if this Service desires to route external
+     traffic to node-local or cluster-wide endpoints. &quot;Local&quot; preserves the
+     client source IP and avoids a second hop for LoadBalancer and Nodeport type
+     services, but risks potentially imbalanced traffic spreading. &quot;Cluster&quot;
+     obscures the client source IP and may cause a second hop to another node,
+     but should have good overall load-spreading.
+</code></pre>
+
+<p>And Metallb has a decent write up on what they do when you configure this stuff:</p>
+
+<p><a href="https://metallb.universe.tf/usage/#traffic-policies" rel="nofollow noreferrer" target="_blank">https://metallb.universe.tf/usage/#traffic-policies</a></p>
+
 <p>With Metallb there are a different set of assumptions.</p>
 
 <p>Metallb can operate in two distinct modes.</p>
 
-<p>A Layer 2 mode that will use vrrp to arp out for the external ip or VIP on the lan.</p>
+<p>A Layer 2 mode that will use vrrp to arp out for the external ip or VIP on the lan. This means that all traffic for the service will be attracted to only one node and dispersed across the pods defined by the service fromt there.</p>
 
-<p>A bgp mode that will announce the external ip or VIP from all of the nodes where at least one pod is running.</p>
+<p>A bgp mode with <code>externalTrafficPolicy: local</code> metallb will announce the external ip or VIP from all of the nodes where at least one pod is running.</p>
 
 <p>the bgp mode relies on ecmp to balance traffic back to the pods. ECMP is a great solution for this problem and I HIGHLY recommend you use this model if you can.</p>
 
@@ -227,7 +248,7 @@ If you are using linux to host a kind cluster. You will not need to do this as t
     ></asciinema-player>
 </p>
 
-<p>We can see the svc get&rsquo;s an ip address immediatly.</p>
+<p>We can see the svc get&rsquo;s an ip address immediately.</p>
 
 <p>And we can curl it!</p>
 

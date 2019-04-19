@@ -14,7 +14,7 @@
 
 <meta itemprop="datePublished" content="2019-04-17T10:44:33-07:00" />
 <meta itemprop="dateModified" content="2019-04-17T10:44:33-07:00" />
-<meta itemprop="wordCount" content="630">
+<meta itemprop="wordCount" content="771">
 
   <meta itemprop="image" content="https://raw.githubusercontent.com/danderson/metallb/master/website/static/images/logo.png">
 
@@ -98,13 +98,34 @@ If you are using linux to host a kind cluster. You will not need to do this as t
 
 <p>Most implementations of this are relatively naive. They place all of the available nodes behind the load balancer and use tcp port knocking to determine if the node is &ldquo;healthy&rdquo; enough to forward traffic to it.</p>
 
+<p>You can define an <code>externalTrafficPolicy</code> on a service of type <code>LoadBalancer</code> and this can help get the behaviour that you want. From the docs:</p>
+
+<pre><code>$ kubectl explain service.spec.externalTrafficPolicy
+KIND:     Service
+VERSION:  v1
+
+FIELD:    externalTrafficPolicy &lt;string&gt;
+
+DESCRIPTION:
+     externalTrafficPolicy denotes if this Service desires to route external
+     traffic to node-local or cluster-wide endpoints. &quot;Local&quot; preserves the
+     client source IP and avoids a second hop for LoadBalancer and Nodeport type
+     services, but risks potentially imbalanced traffic spreading. &quot;Cluster&quot;
+     obscures the client source IP and may cause a second hop to another node,
+     but should have good overall load-spreading.
+</code></pre>
+
+<p>And Metallb has a decent write up on what they do when you configure this stuff:</p>
+
+<p><a href="https://metallb.universe.tf/usage/#traffic-policies" rel="nofollow noreferrer" target="_blank">https://metallb.universe.tf/usage/#traffic-policies</a></p>
+
 <p>With Metallb there are a different set of assumptions.</p>
 
 <p>Metallb can operate in two distinct modes.</p>
 
-<p>A Layer 2 mode that will use vrrp to arp out for the external ip or VIP on the lan.</p>
+<p>A Layer 2 mode that will use vrrp to arp out for the external ip or VIP on the lan. This means that all traffic for the service will be attracted to only one node and dispersed across the pods defined by the service fromt there.</p>
 
-<p>A bgp mode that will announce the external ip or VIP from all of the nodes where at least one pod is running.</p>
+<p>A bgp mode with <code>externalTrafficPolicy: local</code> metallb will announce the external ip or VIP from all of the nodes where at least one pod is running.</p>
 
 <p>the bgp mode relies on ecmp to balance traffic back to the pods. ECMP is a great solution for this problem and I HIGHLY recommend you use this model if you can.</p>
 
@@ -293,7 +314,7 @@ If you are using linux to host a kind cluster. You will not need to do this as t
     ></asciinema-player>
 </p>
 
-<p>We can see the svc get&rsquo;s an ip address immediatly.</p>
+<p>We can see the svc get&rsquo;s an ip address immediately.</p>
 
 <p>And we can curl it!</p>
 
@@ -307,7 +328,7 @@ If you are using linux to host a kind cluster. You will not need to do this as t
         <p>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://mauilion.dev/tags/metallb">metallb</a></span><span class="tag"><a href="https://mauilion.dev/tags/kind">kind</a></span><span class="tag"><a href="https://mauilion.dev/tags/tutorial">tutorial</a></span>
         </p>
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>630 Words</p>
+        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>771 Words</p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2019-04-17 10:44 -0700</p>
       </footer>
 
