@@ -12,12 +12,12 @@
 <meta itemprop="description" content="Setup I am looking to validate a set of changes produced by this PR.
 https://github.com/kubernetes/kubernetes/pull/77523
 In this post I want to show a few things.
- setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prereqs There is a pretty handy tool called gimme put out by the travis-ci folks.">
+ setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prerequisites There is a pretty handy tool called gimme put out by the travis-ci folks.">
 
 
 <meta itemprop="datePublished" content="2019-05-08T09:37:30-07:00" />
 <meta itemprop="dateModified" content="2019-05-08T09:37:30-07:00" />
-<meta itemprop="wordCount" content="1389">
+<meta itemprop="wordCount" content="1455">
 
   <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/36015203">
 
@@ -28,7 +28,7 @@ In this post I want to show a few things.
 <meta property="og:description" content="Setup I am looking to validate a set of changes produced by this PR.
 https://github.com/kubernetes/kubernetes/pull/77523
 In this post I want to show a few things.
- setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prereqs There is a pretty handy tool called gimme put out by the travis-ci folks." />
+ setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prerequisites There is a pretty handy tool called gimme put out by the travis-ci folks." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://mauilion.dev/posts/kind-k8s-testing/" />
 
@@ -42,7 +42,7 @@ In this post I want to show a few things.
 <meta name="twitter:description" content="Setup I am looking to validate a set of changes produced by this PR.
 https://github.com/kubernetes/kubernetes/pull/77523
 In this post I want to show a few things.
- setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prereqs There is a pretty handy tool called gimme put out by the travis-ci folks."/>
+ setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prerequisites There is a pretty handy tool called gimme put out by the travis-ci folks."/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -111,7 +111,7 @@ In this post I want to show a few things.
 <li>validate that the changes have the desired affect.</li>
 </ol>
 
-<h3 id="prereqs">Prereqs<a href="#prereqs" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<h3 id="prerequisites">Prerequisites<a href="#prerequisites" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 
 <p>There is a pretty handy tool called <code>gimme</code> put out by the travis-ci folks.</p>
 
@@ -119,7 +119,7 @@ In this post I want to show a few things.
 
 <p>Read more about it <a href="https://github.com/travis-ci/gimme" rel="nofollow noreferrer" target="_blank">here</a></p>
 
-<p>For this setup I am going to make a local directory called <code>k8s-dev</code> and leverage <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> to configure go in that directory.</p>
+<p>For this setup I am going to leverage <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> to configure go.</p>
 
 <p>We need a system that has <a href="https://github.com/travis-ci/gimme#installation--usage" rel="nofollow noreferrer" target="_blank">gimme</a> and <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> installed.</p>
 
@@ -151,7 +151,7 @@ In this post I want to show a few things.
 </p>
 
 <p>In the cast you can see us checking out <a href="https://github.com/mauilion/k8s-dev" rel="nofollow noreferrer" target="_blank">mauilion/k8s-dev</a>
-Then we move and use gimme to configure go.</p>
+Then we move into the directory and use gimme to configure go via direnv.</p>
 
 <p>We then edit the <code>.envrc</code> file.</p>
 
@@ -165,16 +165,16 @@ Then we move and use gimme to configure go.</p>
 go version &gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span>
 
 <span class="nb">export</span> <span class="nv">GIMME_ENV</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/envs/go1.12.5.linux.amd64.env&#39;</span><span class="p">;</span></code></pre></div>
-<p>I added the <code>GOPATH</code> variable to ensure that when invoked go considers /home/dcooley/k8s-dev the path for go. This is how we can be sure that things like <code>go get k8s.io/kubernetes</code> will pull the src into that directory.
+<p>I added the <code>GOPATH</code> variable to ensure that when invoked go considers <code>/home/dcooley/k8s-dev</code> the path for go. This is how we can be sure that things like <code>go get -d k8s.io/kubernetes sigs.k8s.io/kind</code> will pull the src into that directory.
 This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the location of your checkout of <code>k8s.io/kubernetes</code> as part of the <code>kind build node-image</code> step it will follow the defined <code>GOPATH</code>.</p>
 
-<p>I am also prepending <code>${GOPATH}/bin</code> to the <code>${PATH}</code> variable. So that when we build kind the kind binary will be in our path.</p>
+<p>I am also prepending <code>${GOPATH}/bin</code> to the <code>${PATH}</code> variable. So that when we build <code>kind</code>. The <code>kind</code> binary will be in our path. You can also just put <code>kind</code> i</p>
 
 <h3 id="let-s-build-our-kind-node-images">Let&rsquo;s build our kind node-images<a href="#let-s-build-our-kind-node-images" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 
 <p>Ok next up we need to build our images.</p>
 
-<p>Since we checked out <code>k8s.io/Kubernetes</code> into <code>${GOPATH/src/k8s.io/kubernetes}</code> we can just run <code>kind build node-image --image=mauilion/node:master</code></p>
+<p>Since we checked out <code>k8s.io/kubernetes</code> into <code>${GOPATH}/src/k8s.io/kubernetes</code> we can just run <code>kind build node-image --image=mauilion/node:master</code></p>
 
 <p>This will create an image in my local docker image cache named <code>mauilion/node:master</code></p>
 
@@ -215,13 +215,15 @@ This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the loc
 
 <p>Before we move on. Let&rsquo;s talk about what&rsquo;s happening when we run <code>kind build node-image --image=mauilion/node:77523</code></p>
 
-<p>kind is setup to build this image using a container build of kubernetes. This means that kind will &ldquo;detect&rdquo; where your local checkout of k8s.io/kubernetes is and then mount that into a container and build all the bits.</p>
+<p><code>kind</code> is setup to build this image using a container build of kubernetes. This means that <code>kind</code> will &ldquo;detect&rdquo; where your local checkout of <code>k8s.io/kubernetes</code> is via your <code>${GOPATH}</code> then mount that into a container and build all the bits.</p>
 
 <p>the node image will contain all binaries and images needed to run kubernetes as produced from your local checkout of the source.</p>
 
 <p>This is a PRETTY DARN COOL thing!</p>
 
 <p>This means that I can easily setup an environment that will allow me to dig into and validate particular behavior.</p>
+
+<p>Also this is a way to iterate over changes to the codebase.</p>
 
 <p>Alright let&rsquo;s move on.</p>
 
@@ -239,7 +241,7 @@ This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the loc
     ├── config
     ├── km-config.yaml
     └── test.yaml</code></pre></div>
-<p>In the cast below you can see that we are moving into the directory for each cluster. This is where the resources for this cluster are defined.
+<p>In the cast below you can see that we are moving into the directory for each cluster. If you take a look at the .envrc in the directory you can see we are using direnv to export <code>KUBECONFIG</code> and configure <code>kubectl</code>. This is also where the resources for this cluster are defined.
 We then run something like:</p>
 
 <pre><code>kind create cluster --config config --name=master --image=mauilion/node:master
@@ -308,7 +310,7 @@ By that I mean that each pod is scheduled to a specific node. We do this by conf
 <code>overlay-77523-worker</code>
 <code>overlay-77523-worker2</code></p>
 
-<p>The echo pod is deploying <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">inanimate/echo-server</a> and from the name you can see that this will be deployed worker2.</p>
+<p>The echo pod is using <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">inanimate/echo-server</a> and from the name you can see that this will be deployed on worker2.</p>
 
 <p>The netshoot pods are set with <code>hostNetwork: True</code> This means that if you exec into the pod you can see the ip stack of the underlying node.</p>
 
@@ -319,6 +321,8 @@ By that I mean that each pod is scheduled to a specific node. We do this by conf
 <p>We also define a svc of type LoadBalancer in each of our clusters.</p>
 
 <p>for our <code>master</code> cluster we use <code>172.17.255.1:8080</code> and on the <code>77523</code> cluster it&rsquo;s <code>172.17.254.1:8080</code></p>
+
+<p>I am using metallb for this you can read more about metallb <a href="https://metallb.universe.tf/" rel="nofollow noreferrer" target="_blank">here</a>. More about how I use it with kind <a href="https://mauilion.dev/posts/kind-metallb/" rel="nofollow noreferrer" target="_blank">here</a></p>
 
 <h4 id="let-s-test-it">Let&rsquo;s test it!<a href="#let-s-test-it" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 
@@ -436,7 +440,7 @@ kind delete cluster --name=77523
         <p>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://mauilion.dev/tags/local">local</a></span><span class="tag"><a href="https://mauilion.dev/tags/kubernetes">kubernetes</a></span><span class="tag"><a href="https://mauilion.dev/tags/testing">testing</a></span><span class="tag"><a href="https://mauilion.dev/tags/kind">kind</a></span>
         </p>
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1389 Words</p>
+        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1455 Words</p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2019-05-08 09:37 -0700</p>
       </footer>
 
@@ -479,7 +483,7 @@ text-align: center;
 <ul>
 <li><a href="#setup">Setup</a>
 <ul>
-<li><a href="#prereqs">Prereqs</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
 <li><a href="#let-s-get-started-with-go">Let&rsquo;s get started with go!</a></li>
 <li><a href="#let-s-build-our-kind-node-images">Let&rsquo;s build our kind node-images</a></li>
 <li><a href="#let-s-bring-up-our-clusters">Let&rsquo;s bring up our clusters</a></li>

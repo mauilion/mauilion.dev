@@ -21,7 +21,7 @@
       <description>Setup I am looking to validate a set of changes produced by this PR.
 https://github.com/kubernetes/kubernetes/pull/77523
 In this post I want to show a few things.
- setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prereqs There is a pretty handy tool called gimme put out by the travis-ci folks.</description>
+ setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prerequisites There is a pretty handy tool called gimme put out by the travis-ci folks.</description>
     </item>
     
     <item>
