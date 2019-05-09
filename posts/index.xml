@@ -6,8 +6,359 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 17 Apr 2019 10:44:33 -0700</lastBuildDate>
+		<lastBuildDate>Wed, 08 May 2019 09:37:30 -0700</lastBuildDate>
 		<atom:link href="https://mauilion.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Using Kind to test a pr for Kubernetes.</title>
+			<link>https://mauilion.dev/posts/kind-k8s-testing/</link>
+			<pubDate>Wed, 08 May 2019 09:37:30 -0700</pubDate>
+			
+			<guid>https://mauilion.dev/posts/kind-k8s-testing/</guid>
+			<description>Setup I am looking to validate a set of changes produced by this PR.
+https://github.com/kubernetes/kubernetes/pull/77523
+In this post I want to show a few things.
+ setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prereqs There is a pretty handy tool called gimme put out by the travis-ci folks.</description>
+			<content type="html"><![CDATA[
+
+<h2 id="setup">Setup</h2>
+
+<p>I am looking to validate a set of changes produced by this PR.</p>
+
+<p><a href="https://github.com/kubernetes/kubernetes/pull/77523" rel="nofollow noreferrer" target="_blank">https://github.com/kubernetes/kubernetes/pull/77523</a></p>
+
+<p>In this post I want to show a few things.</p>
+
+<ol>
+<li>setup a go environment.</li>
+<li>build kind</li>
+<li>checkout the k8s.io/kubernetes source</li>
+<li>bring up a cluster to repoduce the issue.</li>
+<li>build an image based on Andrews changes</li>
+<li>bring up a cluster with that image</li>
+<li>validate that the changes have the desired affect.</li>
+</ol>
+
+<h3 id="prereqs">Prereqs</h3>
+
+<p>There is a pretty handy tool called <code>gimme</code> put out by the travis-ci folks.</p>
+
+<p>This in my opinion is the &ldquo;best&rdquo; way to setup a go environment.</p>
+
+<p>Read more about it <a href="https://github.com/travis-ci/gimme" rel="nofollow noreferrer" target="_blank">here</a></p>
+
+<p>For this setup I am going to make a local directory called <code>k8s-dev</code> and leverage <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> to configure go in that directory.</p>
+
+<p>We need a system that has <a href="https://github.com/travis-ci/gimme#installation--usage" rel="nofollow noreferrer" target="_blank">gimme</a> and <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> installed.</p>
+
+<p>I will refer you to the instructions in the above links to get this stuff setup in your environment :)</p>
+
+<h3 id="let-s-get-started-with-go">Let&rsquo;s get started with go!</h3>
+
+<p>For this next bit I have created a repo you can checkout and make use of.</p>
+
+<p>
+    <asciinema-player
+        src="/casts/k8dev-go.cast"
+        cols="200"
+        rows="28"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>In the cast you can see us checking out <a href="https://github.com/mauilion/k8s-dev" rel="nofollow noreferrer" target="_blank">mauilion/k8s-dev</a>
+Then we move and use gimme to configure go.</p>
+
+<p>We then edit the <code>.envrc</code> file.</p>
+
+<p>I want to take a second to explain why.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">unset</span> GOOS<span class="p">;</span>
+<span class="nb">unset</span> GOARCH<span class="p">;</span>
+<span class="nb">unset</span> GOPATH<span class="p">;</span>
+<span class="nb">export</span> <span class="nv">GOPATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>
+<span class="nb">export</span> <span class="nv">GOROOT</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/versions/go1.12.5.linux.amd64&#39;</span><span class="p">;</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">GOPATH</span><span class="si">}</span><span class="s2">/bin:/home/dcooley/.gimme/versions/go1.12.5.linux.amd64/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">;</span>
+go version &gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span>
+
+<span class="nb">export</span> <span class="nv">GIMME_ENV</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/envs/go1.12.5.linux.amd64.env&#39;</span><span class="p">;</span></code></pre></div>
+<p>I added the <code>GOPATH</code> variable to ensure that when invoked go considers /home/dcooley/k8s-dev the path for go. This is how we can be sure that things like <code>go get k8s.io/kubernetes</code> will pull the src into that directory.
+This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the location of your checkout of <code>k8s.io/kubernetes</code> as part of the <code>kind build node-image</code> step it will follow the defined <code>GOPATH</code>.</p>
+
+<p>I am also prepending <code>${GOPATH}/bin</code> to the <code>${PATH}</code> variable. So that when we build kind the kind binary will be in our path.</p>
+
+<h3 id="let-s-build-our-kind-node-images">Let&rsquo;s build our kind node-images</h3>
+
+<p>Ok next up we need to build our images.</p>
+
+<p>Since we checked out <code>k8s.io/Kubernetes</code> into <code>${GOPATH/src/k8s.io/kubernetes}</code> we can just run <code>kind build node-image --image=mauilion/node:master</code></p>
+
+<p>This will create an image in my local docker image cache named <code>mauilion/node:master</code></p>
+
+<p>Once complete we also have to build the image based on the PR that Andrew provided.</p>
+
+<p>In the ticket we can see src of Andrews PR. <code>andrewsykim:fix-xlb-from-local</code></p>
+
+<p>So we need to grab that branch and build another image.</p>
+
+<p>The way I do this so as not to mess up the import paths and such is to move into <code>${GOPATH}/src/k8s.io/kubernetes</code> and run <code>git remote add andrewsykim git@github.com:andrewsykim\kubernetes</code></p>
+
+<p>Since Andrew is pushing his code to a branch <code>fix-xlb-from-local</code> of his fork <code>git@github.com:andrewsykim/kubernetes</code> of <code>k8s.io/kubernetes</code></p>
+
+<p>Once the remote is added I can do a <code>git fetch --all</code> and that will pull down all the known branches from all the remotes.</p>
+
+<p>Then we can switch to Andrews branch and build a new <code>kind node-image</code></p>
+
+<p>
+    <asciinema-player
+        src="/casts/k8dev-build.cast"
+        cols="200"
+        rows="28"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>Before we move on. Let&rsquo;s talk about what&rsquo;s happening when we run <code>kind build node-image --image=mauilion/node:77523</code></p>
+
+<p>kind is setup to build this image using a container build of kubernetes. This means that kind will &ldquo;detect&rdquo; where your local checkout of k8s.io/kubernetes is and then mount that into a container and build all the bits.</p>
+
+<p>the node image will contain all binaries and images needed to run kubernetes as produced from your local checkout of the source.</p>
+
+<p>This is a PRETTY DARN COOL thing!</p>
+
+<p>This means that I can easily setup an environment that will allow me to dig into and validate particular behavior.</p>
+
+<p>Alright let&rsquo;s move on.</p>
+
+<h3 id="let-s-bring-up-our-clusters">Let&rsquo;s bring up our clusters</h3>
+
+<p>In the repo I&rsquo;ve the following directory structure:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kind/
+├── <span class="m">77523</span>              <span class="c1"># a repo with the bits for the 77523 clusters</span>
+│   ├── .envrc         <span class="c1"># this .envrc will enable direnv to export our kubeconfig for this cluster when we move into this dir.</span>
+│   ├── config         <span class="c1"># the kind config for this cluster. Basically 1 control plane node and 2 worker nodes</span>
+│   ├── km-config.yaml <span class="c1"># the metallb configuration for vip addresses</span>
+│   └── test.yaml      <span class="c1"># the test.yaml has our statically defined pods and service so that we can test.</span>
+└── master
+    ├── .envrc
+    ├── config
+    ├── km-config.yaml
+    └── test.yaml</code></pre></div>
+<p>In the cast below you can see that we are moving into the directory for each cluster. This is where the resources for this cluster are defined.
+We then run something like:</p>
+
+<pre><code>kind create cluster --config config --name=master --image=mauilion/node:master
+</code></pre>
+
+<p>This does a few things.
+* It creates a cluster where the nodes will follow a naming convention we use in our statically defined test.yaml
+* It will use the node-image that we created in the <code>build</code> step.
+* It will use the config defined and create a cluster of 1 control plane node and 2 worker nodes.</p>
+
+<p>
+    <asciinema-player
+        src="/casts/k8dev-cluster-up.cast"
+        cols="200"
+        rows="28"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<h3 id="now-for-the-fun-bit-let-s-validate">Now for the fun bit. Let&rsquo;s validate</h3>
+
+<p>This PR is setup to fix a behavior in the way that <code>externalTrafficPolicy: Local</code> works.</p>
+
+<h4 id="the-problem">The problem:</h4>
+
+<p>If we bringup a pod on one of two workers and expose that pod with a service of type LoadBalancer.
+And that service is configured with <code>externalTrafficPolicy: Local</code>.
+A pod that is configured with <code>hostNetwork: True</code> on the node where the pod is not will fail to connect to the external lb ip. That traffic will be dropped.</p>
+
+<h4 id="the-fix">The fix:</h4>
+
+<p>To fix this behavior Andrew has implemented a another iptables rule.</p>
+
+<pre><code>-A KUBE-XLB-ECF5TUORC5E2ZCRD -s 10.8.0.0/14 -m comment --comment &quot;Redirect pods trying to reach external loadbalancer VIP to clusterIP&quot; -j KUBE-SVC-ECF5TUORC5E2ZCRD
+</code></pre>
+
+<p>This change enables traffic for a svc from a pod or from the host to be redirected to the service defined by kube-proxy.</p>
+
+<h4 id="our-testing-setup">Our testing setup:</h4>
+
+<p>We have brought up 2 clusters:
+* master
+* 77523</p>
+
+<p>Into each of them we have deployed our test.yaml and metallb and a config for metallb.</p>
+
+<p>The test.yaml is a set of pods that are statically defined.
+By that I mean that each pod is scheduled to a specific node. We do this by configuring <code>nodeName</code> in the pod spec.</p>
+
+<p>There are 5 pods that we are deploying.
+<code>echo-77523-worker2</code>
+<code>netshoot-77523-worker</code>
+<code>netshoot-77523-worker2</code>
+<code>overlay-77523-worker</code>
+<code>overlay-77523-worker2</code></p>
+
+<p>The echo pod is deploying <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">inanimate/echo-server</a> and from the name you can see that this will be deployed worker2.</p>
+
+<p>The netshoot pods are set with <code>hostNetwork: True</code> This means that if you exec into the pod you can see the ip stack of the underlying node.</p>
+
+<p>The overlay pods are the same except they are deployed as part of the overlay network and will be given a <code>pod ip</code></p>
+
+<p>The netshoot and overlay pods are both using <a href="https://github.com/nicolaka/netshoot" rel="nofollow noreferrer" target="_blank">nicolaka/netshoot</a></p>
+
+<p>We also define a svc of type LoadBalancer in each of our clusters.</p>
+
+<p>for our <code>master</code> cluster we use <code>172.17.255.1:8080</code> and on the <code>77523</code> cluster it&rsquo;s <code>172.17.254.1:8080</code></p>
+
+<h4 id="let-s-test-it">Let&rsquo;s test it!</h4>
+
+<p>From our understanding of the problem I expect that if exec into the <code>netshoot-master-worker</code> pod I will not be able to <code>curl 172.17.255.1:8080</code>
+<p>
+    <asciinema-player
+        src="/casts/k8dev-master.cast"
+        cols="200"
+        rows="28"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p></p>
+
+<p>if we try from the <code>77523</code> cluster we can see that it does work!
+<p>
+    <asciinema-player
+        src="/casts/k8dev-77523.cast"
+        cols="200"
+        rows="28"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p></p>
+
+<p>Why does it work now tho?</p>
+
+<p>
+    <asciinema-player
+        src="/casts/k8dev-why.cast"
+        cols="200"
+        rows="28"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+
+<p>In the master cluster we can chase down the XLB entry and it looks like this:</p>
+
+<pre><code>:KUBE-XLB-U52O5CQH2XXNVZ54 - [0:0]
+-A KUBE-FW-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: loadbalancer IP&quot; -j KUBE-XLB-U52O5CQH2XXNVZ54
+-A KUBE-NODEPORTS -p tcp -m comment --comment &quot;default/echo:&quot; -m tcp --dport 30012 -j KUBE-XLB-U52O5CQH2XXNVZ54
+-A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: has no local endpoints&quot; -j KUBE-MARK-DROP
+
+</code></pre>
+
+<p>in the 77523 cluster:</p>
+
+<pre><code>:KUBE-XLB-U52O5CQH2XXNVZ54 - [0:0]
+-A KUBE-FW-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: loadbalancer IP&quot; -j KUBE-XLB-U52O5CQH2XXNVZ54
+-A KUBE-NODEPORTS -p tcp -m comment --comment &quot;default/echo:&quot; -m tcp --dport 31972 -j KUBE-XLB-U52O5CQH2XXNVZ54
+-A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;masquerade LOCAL traffic for default/echo: LB IP&quot; -m addrtype --src-type LOCAL -j KUBE-MARK-MASQ
+-A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;route LOCAL traffic for default/echo: LB IP to service chain&quot; -m addrtype --src-type LOCAL -j KUBE-SVC-U52O5CQH2XXNVZ54
+-A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: has no local endpoints&quot; -j KUBE-MARK-DROP
+</code></pre>
+
+<p>The rules that Andrew&rsquo;s patch adds are:</p>
+
+<pre><code>-A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;masquerade LOCAL traffic for default/echo: LB IP&quot; -m addrtype --src-type LOCAL -j KUBE-MARK-MASQ
+-A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;route LOCAL traffic for default/echo: LB IP to service chain&quot; -m addrtype --src-type LOCAL -j KUBE-SVC-U52O5CQH2XXNVZ54
+</code></pre>
+
+<p>And the comments make it pretty clear what&rsquo;s happening!</p>
+
+<h3 id="wrap-up">Wrap up!</h3>
+
+<p>Let&rsquo;s make sure you wipe out those clusters.</p>
+
+<pre><code>kind delete cluster --name=master
+kind delete cluster --name=77523
+</code></pre>
+
+<p>Also consider running <code>docker system prune --all</code> and <code>docker volume prune</code> every so often to keep your dockers cache tidy :)</p>
+
+<p>shout-out to <a href="https://twitter.com/a_sykim" rel="nofollow noreferrer" target="_blank">@a_sykim</a> you should follow him on twitter he&rsquo;s great!</p>
+
+<p>Thanks!</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Using MetalLb with Kind</title>

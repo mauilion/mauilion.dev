@@ -4,31 +4,54 @@
   
   <url>
     <loc>https://mauilion.dev/</loc>
-    <lastmod>2019-04-17T10:44:33-07:00</lastmod>
+    <lastmod>2019-05-08T09:37:30-07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://mauilion.dev/posts/</loc>
-    <lastmod>2019-04-17T10:44:33-07:00</lastmod>
+    <lastmod>2019-05-08T09:37:30-07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://mauilion.dev/tags/</loc>
-    <lastmod>2019-04-17T10:44:33-07:00</lastmod>
+    <lastmod>2019-05-08T09:37:30-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/posts/kind-k8s-testing/</loc>
+    <lastmod>2019-05-08T09:37:30-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/tags/kind/</loc>
+    <lastmod>2019-05-08T09:37:30-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/tags/kubernetes/</loc>
+    <lastmod>2019-05-08T09:37:30-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/tags/local/</loc>
+    <lastmod>2019-05-08T09:37:30-07:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/tags/testing/</loc>
+    <lastmod>2019-05-08T09:37:30-07:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://mauilion.dev/posts/kind-metallb/</loc>
     <lastmod>2019-04-17T10:44:33-07:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mauilion.dev/tags/kind/</loc>
-    <lastmod>2019-04-17T10:44:33-07:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>

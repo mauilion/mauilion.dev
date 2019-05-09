@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>testing on Duffie Cooley</title>
+    <link>https://mauilion.dev/tags/testing/</link>
+    <description>Recent content in testing on Duffie Cooley</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 08 May 2019 09:37:30 -0700</lastBuildDate>
+    
+	<atom:link href="https://mauilion.dev/tags/testing/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Using Kind to test a pr for Kubernetes.</title>
+      <link>https://mauilion.dev/posts/kind-k8s-testing/</link>
+      <pubDate>Wed, 08 May 2019 09:37:30 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/posts/kind-k8s-testing/</guid>
+      <description>Setup I am looking to validate a set of changes produced by this PR.
+https://github.com/kubernetes/kubernetes/pull/77523
+In this post I want to show a few things.
+ setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prereqs There is a pretty handy tool called gimme put out by the travis-ci folks.</description>
+    </item>
+    
+  </channel>
+</rss>
