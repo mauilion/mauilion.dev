@@ -9,12 +9,13 @@
 	<meta name="msapplication-TileColor" content="#ababab">
 
 <meta itemprop="name" content="Using MetalLb with Kind">
-<meta itemprop="description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.">
+<meta itemprop="description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.
+If you are using a Mac this tutorial may not be super useful as the way Docker Desktop works on a Mac doesn&rsquo;t expose the &ldquo;docker network&rdquo; to the underlying host.">
 
 
 <meta itemprop="datePublished" content="2019-04-17T10:44:33-07:00" />
 <meta itemprop="dateModified" content="2019-04-17T10:44:33-07:00" />
-<meta itemprop="wordCount" content="771">
+<meta itemprop="wordCount" content="780">
 
   <meta itemprop="image" content="https://raw.githubusercontent.com/danderson/metallb/master/website/static/images/logo.png">
 
@@ -22,7 +23,8 @@
 
 <meta itemprop="keywords" content="metallb,kind,tutorial," />
 <meta property="og:title" content="Using MetalLb with Kind" />
-<meta property="og:description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster." />
+<meta property="og:description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.
+If you are using a Mac this tutorial may not be super useful as the way Docker Desktop works on a Mac doesn&rsquo;t expose the &ldquo;docker network&rdquo; to the underlying host." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://mauilion.dev/posts/kind-metallb/" />
 
@@ -33,7 +35,8 @@
 <meta name="twitter:image" content="https://raw.githubusercontent.com/danderson/metallb/master/website/static/images/logo.png"/>
 
 <meta name="twitter:title" content="Using MetalLb with Kind"/>
-<meta name="twitter:description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster."/>
+<meta name="twitter:description" content="Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.
+If you are using a Mac this tutorial may not be super useful as the way Docker Desktop works on a Mac doesn&rsquo;t expose the &ldquo;docker network&rdquo; to the underlying host."/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -87,8 +90,9 @@
 <h3 id="preamble">Preamble:<a href="#preamble" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 
 <p>When using metallb with kind we are going to deploy it in <code>l2-mode</code>. This means that we need to be able to connect to the ip addresses of the node subnet.
-If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it.
 If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.</p>
+
+<p>If you are using a Mac this tutorial may not be super useful as the way Docker Desktop works on a Mac doesn&rsquo;t expose the &ldquo;docker network&rdquo; to the underlying host. Due to this restriction I recommend that you make do with <code>kubectl proxy</code></p>
 
 <h3 id="problem-statement">Problem Statement:<a href="#problem-statement" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 
@@ -328,7 +332,7 @@ DESCRIPTION:
         <p>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://mauilion.dev/tags/metallb">metallb</a></span><span class="tag"><a href="https://mauilion.dev/tags/kind">kind</a></span><span class="tag"><a href="https://mauilion.dev/tags/tutorial">tutorial</a></span>
         </p>
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>771 Words</p>
+        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>780 Words</p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2019-04-17 10:44 -0700</p>
       </footer>
 

@@ -30,7 +30,8 @@ In this post I want to show a few things.
       <pubDate>Wed, 17 Apr 2019 10:44:33 -0700</pubDate>
       
       <guid>https://mauilion.dev/posts/kind-metallb/</guid>
-      <description>Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using kind on Mac or Windows this will require you to add a route to your laptop routing the subnet used by your kind cluster to the vm that is hosting it. If you are using linux to host a kind cluster.</description>
+      <description>Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.
+If you are using a Mac this tutorial may not be super useful as the way Docker Desktop works on a Mac doesn&amp;rsquo;t expose the &amp;ldquo;docker network&amp;rdquo; to the underlying host.</description>
     </item>
     
     <item>

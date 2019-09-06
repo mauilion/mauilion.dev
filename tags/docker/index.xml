@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>docker on Duffie Cooley</title>
+    <link>https://mauilion.dev/tags/docker/</link>
+    <description>Recent content in docker on Duffie Cooley</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Mon, 01 Jul 2019 13:42:45 -0700</lastBuildDate>
+    
+	<atom:link href="https://mauilion.dev/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>What is Docker in Docker</title>
+      <link>https://mauilion.dev/posts/dind/</link>
+      <pubDate>Mon, 01 Jul 2019 13:42:45 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/posts/dind/</guid>
+      <description>Just got back from vacation and I am excited to bring another blog post on something I don&amp;rsquo;t think is terribly well explained. Docker in Docker (DinD) is an interesting way to make use of the docker and containerization in general.
+The most interesting thing to me is that there are at least two technical definitions of what DinD is.
+ You have a node where docker is running and you expose the docker socket on that node to a container that has been started.</description>
+    </item>
+    
+  </channel>
+</rss>
