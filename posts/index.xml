@@ -234,7 +234,7 @@ storage for the cluster.</p>
 </ul>
 <p>
     <asciinema-player
-        src="/casts/kind-pvc-default-hostpath.cast"
+        src="/casts/kind-pvc-hostpath.cast"
         cols="200"
         rows="35"
         
