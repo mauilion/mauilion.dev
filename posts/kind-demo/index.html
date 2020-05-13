@@ -7,25 +7,20 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="theme-color" content="#ababab">
 	<meta name="msapplication-TileColor" content="#ababab">
-
 <meta itemprop="name" content="Presenting to the San Francisco Kubernetes Meetup about kind!&#34;">
 <meta itemprop="description" content="On 4/7/2019 I had the opportunity to talk to folks that attended the SF Kubernetes meetup Anaplan about kind!
 It&rsquo;s a great project and I end up using kind everyday to validate or develop designs for Kubernetes clusters.
 The slides that I presented are here: mauilion.github.io/kind-demo and a link to the repository with the deck and the content used to bring up the demo cluster is here: github.com/mauilion/kind-demo
 
 In the talk I dug in a bit about what kind and kubeadm are and what problems they solve.">
-
-
 <meta itemprop="datePublished" content="2019-04-10T15:28:10-07:00" />
 <meta itemprop="dateModified" content="2019-04-10T15:28:10-07:00" />
 <meta itemprop="wordCount" content="969">
-
-  <meta itemprop="image" content="https://mauilion.github.io/kind-demo/static/logo.png">
-
+<meta itemprop="image" content="https://mauilion.github.io/kind-demo/static/logo.png">
 
 
-<meta itemprop="keywords" content="talks,kind," />
-<meta property="og:title" content="Presenting to the San Francisco Kubernetes Meetup about kind!&#34;" />
+
+<meta itemprop="keywords" content="talks,kind," /><meta property="og:title" content="Presenting to the San Francisco Kubernetes Meetup about kind!&#34;" />
 <meta property="og:description" content="On 4/7/2019 I had the opportunity to talk to folks that attended the SF Kubernetes meetup Anaplan about kind!
 It&rsquo;s a great project and I end up using kind everyday to validate or develop designs for Kubernetes clusters.
 The slides that I presented are here: mauilion.github.io/kind-demo and a link to the repository with the deck and the content used to bring up the demo cluster is here: github.com/mauilion/kind-demo
@@ -33,10 +28,9 @@ The slides that I presented are here: mauilion.github.io/kind-demo and a link to
 In the talk I dug in a bit about what kind and kubeadm are and what problems they solve." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://mauilion.dev/posts/kind-demo/" />
-
 <meta property="og:image" content="https://mauilion.github.io/kind-demo/static/logo.png" />
-<meta property="article:published_time" content="2019-04-10T15:28:10-07:00"/>
-<meta property="article:modified_time" content="2019-04-10T15:28:10-07:00"/>
+<meta property="article:published_time" content="2019-04-10T15:28:10-07:00" />
+<meta property="article:modified_time" content="2019-04-10T15:28:10-07:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://mauilion.github.io/kind-demo/static/logo.png"/>
 
@@ -55,7 +49,7 @@ In the talk I dug in a bit about what kind and kubeadm are and what problems the
 	<link rel="shortcut icon" href="/favicon.ico">
 
 	<title>Presenting to the San Francisco Kubernetes Meetup about kind!&#34;</title>
-	<link rel="stylesheet" href="https://mauilion.dev/css/style.min.c693329ce3bac2503f88115a4011a284a06d53e30f484562a37664dc4c5f0a74.css" integrity="sha256-xpMynOO6wlA/iBFaQBGihKBtU+MPSEVio3Zk3ExfCnQ=">
+	<link rel="stylesheet" href="https://mauilion.dev/css/style.min.8d137e32cd752710e46928daa817e0f4fca34d07262680887f5bd46761cc01b7.css" integrity="sha256-jRN+Ms11JxDkaSjaqBfg9PyjTQcmJoCIf1vUZ2HMAbc=">
   <style>.bg-img {background-image: url('https://mauilion.github.io/kind-demo/static/logo.png');}</style>
 	<link rel="stylesheet" href="https://mauilion.dev/css/gist.css">
 </head>
@@ -94,33 +88,25 @@ In the talk I dug in a bit about what kind and kubeadm are and what problems the
         <h1>Presenting to the San Francisco Kubernetes Meetup about kind!&#34;</h1>
       </header>
       <div class="content">
-        <p>On 4/7/2019 I had the opportunity to talk to folks that attended the SF Kubernetes meetup <a href="https://www.meetup.com/San-Francisco-Kubernetes-Meetup/events/259713345/" rel="nofollow noreferrer" target="_blank">Anaplan</a> about kind!</p>
-
+        <p>On 4/7/2019 I had the opportunity to talk to folks that attended the SF Kubernetes meetup <a href="https://www.meetup.com/San-Francisco-Kubernetes-Meetup/events/259713345/">Anaplan</a> about kind!</p>
 <p>It&rsquo;s a great project and I end up using kind everyday to validate or develop designs for Kubernetes clusters.</p>
-
-<p>The slides that I presented are here: <a href="https://mauilion.github.com/kind-demo" rel="nofollow noreferrer" target="_blank">mauilion.github.io/kind-demo</a> and a link to the repository with the deck and the content used to bring up the demo cluster is here: <a href="https://github.com/mauilion/kind-demo" rel="nofollow noreferrer" target="_blank">github.com/mauilion/kind-demo</a></p>
-
-<p><a href="https://mauilion.github.io/kind-demo" rel="nofollow noreferrer" target="_blank"><img src="/kind-slide.png" alt="" /></a></p>
-
+<p>The slides that I presented are here: <a href="https://mauilion.github.com/kind-demo">mauilion.github.io/kind-demo</a> and a link to the repository with the deck and the content used to bring up the demo cluster is here: <a href="https://github.com/mauilion/kind-demo">github.com/mauilion/kind-demo</a></p>
+<p><a href="https://mauilion.github.io/kind-demo"><img src="/kind-slide.png" alt=""></a></p>
 <p>In the talk I dug in a bit about what kind and kubeadm are and what problems they solve.</p>
-
 <p>I also demonstrated creating a 7 node cluster on my laptop live!</p>
-
 <p>Finally, we spent a little time talking about the way that Docker in Docker is being used here.</p>
-
 <p>My laptop is a recent Lenovo x1 carbon running Ubuntu and i3.</p>
-
 <p>When I bring up a kind cluster I can see the docker containers that I start with a simple <code>docker ps</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ docker ps --no-trunc 
 CONTAINER ID                                                       IMAGE                  COMMAND                                  CREATED             STATUS              PORTS                                  NAMES
-b8f8ef6d2d97836dc66e09fe5e1a4c7e1b7a880c95372b8d4881288238985f22   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       <span class="m">36533</span>/tcp, <span class="m">127</span>.0.0.1:36533-&gt;6443/tcp   kind-external-load-balancer
-69daaf381d8a4dbafb1197502446858e9b6e9e950c0b8db1eb1759dc2883f3ec   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       <span class="m">34675</span>/tcp, <span class="m">127</span>.0.0.1:34675-&gt;6443/tcp   kind-control-plane3
-9f577280b62052d5caeecd7483e3283f01d3a3c784c4620efca15338cd0cad23   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       <span class="m">38847</span>/tcp, <span class="m">127</span>.0.0.1:38847-&gt;6443/tcp   kind-control-plane
+b8f8ef6d2d97836dc66e09fe5e1a4c7e1b7a880c95372b8d4881288238985f22   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       36533/tcp, 127.0.0.1:36533-&gt;6443/tcp   kind-external-load-balancer
+69daaf381d8a4dbafb1197502446858e9b6e9e950c0b8db1eb1759dc2883f3ec   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       34675/tcp, 127.0.0.1:34675-&gt;6443/tcp   kind-control-plane3
+9f577280b62052d5caeecd7483e3283f01d3a3c784c4620efca15338cd0cad23   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       38847/tcp, 127.0.0.1:38847-&gt;6443/tcp   kind-control-plane
 dfcab2e279ffbb2710dbdaa3386814887d081ddd378641777116b3fed131a3b0   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                                              kind-worker
-e486393a724079b77b4aaec5de18fd0aea70f9ce0b46bb6d45edb3382bf3cb32   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       <span class="m">35759</span>/tcp, <span class="m">127</span>.0.0.1:35759-&gt;6443/tcp   kind-control-plane2
+e486393a724079b77b4aaec5de18fd0aea70f9ce0b46bb6d45edb3382bf3cb32   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       35759/tcp, 127.0.0.1:35759-&gt;6443/tcp   kind-control-plane2
 be76f1f1ba3c365a5058c2f46b555174c1c6b28418844621e31a2e2c548c5e5f   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                                              kind-worker2
-5a845004c40b035a198333a7f8c17eec8c3a024db15f484af4b5d7974e4c27db   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                                              kind-worker3</code></pre></div>
-<p>And if I exec into one of the control plane &ldquo;nodes&rdquo; and run docker ps:</p>
+5a845004c40b035a198333a7f8c17eec8c3a024db15f484af4b5d7974e4c27db   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                                              kind-worker3
+</code></pre></div><p>And if I exec into one of the control plane &ldquo;nodes&rdquo; and run docker ps:</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">root@kind-control-plane:/# docker ps
 CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS               NAMES
 0904a715c607        18ee25ef69a8           <span class="s2">&#34;kube-controller-man…&#34;</span>   <span class="m">11</span> minutes ago      Up <span class="m">11</span> minutes                           k8s_kube-controller-manager_kube-controller-manager-kind-control-plane_kube-system_0139f650b0ebdfe8039809598eafaed5_1
@@ -134,51 +120,49 @@ f8ccefbb6faf        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</sp
 b2dab14dc554        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_kube-scheduler-kind-control-plane_kube-system_4b52d75cab61380f07c0c5a69fb371d4_0
 aa56021201fb        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_kube-controller-manager-kind-control-plane_kube-system_0139f650b0ebdfe8039809598eafaed5_0
 71d3e0cb6fe2        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_kube-apiserver-kind-control-plane_kube-system_36fd00068b02bdfc674c44e345a08553_0
-8a2e80860798        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_etcd-kind-control-plane_kube-system_a17306e4c3c6a492df6a1ccea459c458_0</code></pre></div>
-<p>and from the underlying node we can the processes that are related to the containers.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"> <span class="m">2572</span> ?        Ssl    <span class="m">1</span>:44 /usr/bin/dockerd --live-restore -H fd://
- <span class="m">2655</span> ?        Ssl    <span class="m">1</span>:40  <span class="se">\_</span> docker-containerd --config /var/run/docker/containerd/containerd.toml
-<span class="m">10669</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/9f577280b62052d5caeecd7483e3283f01d3a
-<span class="m">10801</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>   <span class="se">\_</span> /sbin/init
-<span class="m">14598</span> ?        S&lt;s    <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="se">\_</span> /lib/systemd/systemd-journald
-<span class="m">14736</span> ?        Ssl    <span class="m">2</span>:18  <span class="p">|</span>   <span class="p">|</span>       <span class="se">\_</span> /usr/bin/dockerd -H fd://
-<span class="m">14958</span> ?        Ssl    <span class="m">0</span>:33  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> docker-containerd --config /var/run/docker/containerd/containerd.toml
-<span class="m">22752</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/8a2e8086079885ea914c5
-<span class="m">22816</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">22762</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/71d3e0cb6fe2f988842bb
-<span class="m">22852</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">22777</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/aa56021201fb02aa8d855
-<span class="m">22846</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">22795</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/b2dab14dc554cdcf40e13
-<span class="m">22881</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">23015</span> ?        Sl     <span class="m">0</span>:03  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/37ce90751bb7b196243f1
-<span class="m">23061</span> ?        Ssl    <span class="m">4</span>:41  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> etcd --advertise-client-urls<span class="o">=</span>https://172.17.0.6:2379 --cert-file<span class="o">=</span>/etc/kubernetes/pki/etcd/server.crt --client-cert-auth<span class="o">=</span><span class="nb">true</span> --data-dir
-<span class="m">23066</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/3b722fb72dd30e8b3e07f
-<span class="m">23126</span> ?        Ssl    <span class="m">5</span>:30  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> kube-apiserver --authorization-mode<span class="o">=</span>Node,RBAC --advertise-address<span class="o">=</span><span class="m">172</span>.17.0.6 --allow-privileged<span class="o">=</span><span class="nb">true</span> --client-ca-file<span class="o">=</span>/etc/kubernetes/p
-<span class="m">24764</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/f8ccefbb6faf067876cf4
-<span class="m">24830</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">24779</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/57b9c22fa25a83e4c69ca
-<span class="m">24819</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">24895</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/036e0f373c0bcac56484c
-<span class="m">24921</span> ?        Ssl    <span class="m">0</span>:18  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /usr/local/bin/kube-proxy --config<span class="o">=</span>/var/lib/kube-proxy/config.conf --hostname-override<span class="o">=</span>kind-control-plane
-<span class="m">26721</span> ?        Sl     <span class="m">0</span>:04  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/adb83f623945215c3597a
-<span class="m">26746</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /sbin/runsvdir -P /etc/service/enabled
-<span class="m">28040</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv bird6
-<span class="m">28242</span> ?        S      <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> bird6 -R -s /var/run/calico/bird6.ctl -d -c /etc/calico/confd/config/bird6.cfg
-<span class="m">28041</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv confd
-<span class="m">28047</span> ?        Sl     <span class="m">0</span>:28  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> calico-node -confd
-<span class="m">28042</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv felix
-<span class="m">28044</span> ?        Sl     <span class="m">2</span>:03  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> calico-node -felix
-<span class="m">28043</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv bird
-<span class="m">28245</span> ?        S      <span class="m">0</span>:01  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>           <span class="se">\_</span> bird -R -s /var/run/calico/bird.ctl -d -c /etc/calico/confd/config/bird.cfg
-<span class="m">27663</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/cce01b13d1be8c0e434cb
-<span class="m">27701</span> ?        Ssl    <span class="m">1</span>:19  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> kube-scheduler --address<span class="o">=</span><span class="m">127</span>.0.0.1 --kubeconfig<span class="o">=</span>/etc/kubernetes/scheduler.conf --leader-elect<span class="o">=</span><span class="nb">true</span>
-<span class="m">27704</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/0904a715c607d662900b1
-<span class="m">27744</span> ?        Ssl    <span class="m">0</span>:04  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>           <span class="se">\_</span> kube-controller-manager --enable-hostpath-provisioner<span class="o">=</span><span class="nb">true</span> --address<span class="o">=</span><span class="m">127</span>.0.0.1 --allocate-node-cidrs<span class="o">=</span><span class="nb">true</span> --authentication-kubeconfig<span class="o">=</span>/</code></pre></div>
-<p>This is because at each of the layers of abstraction, we are again still sharing the same linux kernel. So when I create containers leveraging something like docker in docker I am still making use of the same resources I would even if I were to run the docker command from the underlying node.</p>
-
+8a2e80860798        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_etcd-kind-control-plane_kube-system_a17306e4c3c6a492df6a1ccea459c458_0
+</code></pre></div><p>and from the underlying node we can the processes that are related to the containers.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"> <span class="m">2572</span> ?        Ssl    1:44 /usr/bin/dockerd --live-restore -H fd://
+ <span class="m">2655</span> ?        Ssl    1:40  <span class="se">\_</span> docker-containerd --config /var/run/docker/containerd/containerd.toml
+<span class="m">10669</span> ?        Sl     0:00  <span class="p">|</span>   <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/9f577280b62052d5caeecd7483e3283f01d3a
+<span class="m">10801</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>   <span class="se">\_</span> /sbin/init
+<span class="m">14598</span> ?        S&lt;s    0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="se">\_</span> /lib/systemd/systemd-journald
+<span class="m">14736</span> ?        Ssl    2:18  <span class="p">|</span>   <span class="p">|</span>       <span class="se">\_</span> /usr/bin/dockerd -H fd://
+<span class="m">14958</span> ?        Ssl    0:33  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> docker-containerd --config /var/run/docker/containerd/containerd.toml
+<span class="m">22752</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/8a2e8086079885ea914c5
+<span class="m">22816</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">22762</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/71d3e0cb6fe2f988842bb
+<span class="m">22852</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">22777</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/aa56021201fb02aa8d855
+<span class="m">22846</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">22795</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/b2dab14dc554cdcf40e13
+<span class="m">22881</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">23015</span> ?        Sl     0:03  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/37ce90751bb7b196243f1
+<span class="m">23061</span> ?        Ssl    4:41  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> etcd --advertise-client-urls<span class="o">=</span>https://172.17.0.6:2379 --cert-file<span class="o">=</span>/etc/kubernetes/pki/etcd/server.crt --client-cert-auth<span class="o">=</span><span class="nb">true</span> --data-dir
+<span class="m">23066</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/3b722fb72dd30e8b3e07f
+<span class="m">23126</span> ?        Ssl    5:30  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> kube-apiserver --authorization-mode<span class="o">=</span>Node,RBAC --advertise-address<span class="o">=</span>172.17.0.6 --allow-privileged<span class="o">=</span><span class="nb">true</span> --client-ca-file<span class="o">=</span>/etc/kubernetes/p
+<span class="m">24764</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/f8ccefbb6faf067876cf4
+<span class="m">24830</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">24779</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/57b9c22fa25a83e4c69ca
+<span class="m">24819</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">24895</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/036e0f373c0bcac56484c
+<span class="m">24921</span> ?        Ssl    0:18  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /usr/local/bin/kube-proxy --config<span class="o">=</span>/var/lib/kube-proxy/config.conf --hostname-override<span class="o">=</span>kind-control-plane
+<span class="m">26721</span> ?        Sl     0:04  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/adb83f623945215c3597a
+<span class="m">26746</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /sbin/runsvdir -P /etc/service/enabled
+<span class="m">28040</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv bird6
+<span class="m">28242</span> ?        S      0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> bird6 -R -s /var/run/calico/bird6.ctl -d -c /etc/calico/confd/config/bird6.cfg
+<span class="m">28041</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv confd
+<span class="m">28047</span> ?        Sl     0:28  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> calico-node -confd
+<span class="m">28042</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv felix
+<span class="m">28044</span> ?        Sl     2:03  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> calico-node -felix
+<span class="m">28043</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv bird
+<span class="m">28245</span> ?        S      0:01  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>           <span class="se">\_</span> bird -R -s /var/run/calico/bird.ctl -d -c /etc/calico/confd/config/bird.cfg
+<span class="m">27663</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/cce01b13d1be8c0e434cb
+<span class="m">27701</span> ?        Ssl    1:19  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> kube-scheduler --address<span class="o">=</span>127.0.0.1 --kubeconfig<span class="o">=</span>/etc/kubernetes/scheduler.conf --leader-elect<span class="o">=</span><span class="nb">true</span>
+<span class="m">27704</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/0904a715c607d662900b1
+<span class="m">27744</span> ?        Ssl    0:04  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>           <span class="se">\_</span> kube-controller-manager --enable-hostpath-provisioner<span class="o">=</span><span class="nb">true</span> --address<span class="o">=</span>127.0.0.1 --allocate-node-cidrs<span class="o">=</span><span class="nb">true</span> --authentication-kubeconfig<span class="o">=</span>/
+</code></pre></div><p>This is because at each of the layers of abstraction, we are again still sharing the same linux kernel. So when I create containers leveraging something like docker in docker I am still making use of the same resources I would even if I were to run the docker command from the underlying node.</p>
 <p>Put another way the docker daemon and all it&rsquo;s dependencies is running as an application inside the docker container I started. It&rsquo;s not mounting in the docker socket or any of that just making use of docker and the linux namespaces available to it.</p>
-
 <p>Thanks!</p>
 
       </div>
@@ -215,16 +199,16 @@ text-align: center;
 </style>
 
 <span style="color: silver;">Share: </span><div id="share-buttons">
-<div class="twitter" title="Share this on Twitter" onclick="window.open('http://twitter.com/home?status=https:\/\/mauilion.dev\/\/posts\/kind-demo\/');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1684 408q-67 98-162 167 1 14 1 42 0 130-38 259.5t-115.5 248.5-184.5 210.5-258 146-323 54.5q-271 0-496-145 35 4 78 4 225 0 401-138-105-2-188-64.5t-114-159.5q33 5 61 5 43 0 85-11-112-23-185.5-111.5t-73.5-205.5v-4q68 38 146 41-66-44-105-115t-39-154q0-88 44-163 121 149 294.5 238.5t371.5 99.5q-8-38-8-74 0-134 94.5-228.5t228.5-94.5q140 0 236 102 109-21 205-78-37 115-142 178 93-10 186-50z"/></svg></div>
-<div class="linkedin" title="Share this on Linkedin" onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=https:\/\/mauilion.dev\/\/posts\/kind-demo\/&title=&summary=&source=');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M477 625v991h-330v-991h330zm21-306q1 73-50.5 122t-135.5 49h-2q-82 0-132-49t-50-122q0-74 51.5-122.5t134.5-48.5 133 48.5 51 122.5zm1166 729v568h-329v-530q0-105-40.5-164.5t-126.5-59.5q-63 0-105.5 34.5t-63.5 85.5q-11 30-11 81v553h-329q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5 114.5-15.5q171 0 275 113.5t104 332.5z"/></svg></div>
-<div class="mail" title="Share this through Email" onclick="window.open('mailto:?&body=https:\/\/mauilion.dev\/\/posts\/kind-demo\/');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"/></svg></div>
+<div class="twitter" title="Share this on Twitter" onclick="window.open('http://twitter.com/home?status=https:\/\/mauilion.dev\/https:\/\/mauilion.dev\/posts\/kind-demo\/');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1684 408q-67 98-162 167 1 14 1 42 0 130-38 259.5t-115.5 248.5-184.5 210.5-258 146-323 54.5q-271 0-496-145 35 4 78 4 225 0 401-138-105-2-188-64.5t-114-159.5q33 5 61 5 43 0 85-11-112-23-185.5-111.5t-73.5-205.5v-4q68 38 146 41-66-44-105-115t-39-154q0-88 44-163 121 149 294.5 238.5t371.5 99.5q-8-38-8-74 0-134 94.5-228.5t228.5-94.5q140 0 236 102 109-21 205-78-37 115-142 178 93-10 186-50z"/></svg></div>
+<div class="linkedin" title="Share this on Linkedin" onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=https:\/\/mauilion.dev\/https:\/\/mauilion.dev\/posts\/kind-demo\/&title=&summary=&source=');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M477 625v991h-330v-991h330zm21-306q1 73-50.5 122t-135.5 49h-2q-82 0-132-49t-50-122q0-74 51.5-122.5t134.5-48.5 133 48.5 51 122.5zm1166 729v568h-329v-530q0-105-40.5-164.5t-126.5-59.5q-63 0-105.5 34.5t-63.5 85.5q-11 30-11 81v553h-329q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5 114.5-15.5q171 0 275 113.5t104 332.5z"/></svg></div>
+<div class="mail" title="Share this through Email" onclick="window.open('mailto:?&body=https:\/\/mauilion.dev\/https:\/\/mauilion.dev\/posts\/kind-demo\/');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"/></svg></div>
 </div>
 
 
     </article>
     <aside id="toc">
       <div class="toc-title">Table of Contents</div>
-      
+      <nav id="TableOfContents"></nav>
     </aside>
     <div class="post-nav thin">
       <a class="next-post" href="https://mauilion.dev/posts/kind-metallb/">
@@ -259,7 +243,7 @@ text-align: center;
   </main>
 
 	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
-		<p>&copy; 2019 <a href="https://mauilion.dev/">Duffie Cooley</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>&copy; 2020 <a href="https://mauilion.dev/">Duffie Cooley</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
 		<p>
 			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://mauilion.dev/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
 		</p>

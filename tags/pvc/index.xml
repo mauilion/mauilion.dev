@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>pvc on Duffie Cooley</title>
+    <link>https://mauilion.dev/tags/pvc/</link>
+    <description>Recent content in pvc on Duffie Cooley</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 10 May 2020 14:50:57 -0700</lastBuildDate>
+    
+	<atom:link href="https://mauilion.dev/tags/pvc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Kind Persistent Volumes</title>
+      <link>https://mauilion.dev/posts/kind-pvc/</link>
+      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/posts/kind-pvc/</guid>
+      <description>&lt;p&gt;Hey Frens! This week we are exploring portable persistent volumes in kind!
+This is a pretty neat and funky trick!&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

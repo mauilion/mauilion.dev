@@ -6,8 +6,266 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 08 May 2019 09:37:30 -0700</lastBuildDate>
+		<lastBuildDate>Sun, 10 May 2020 14:50:57 -0700</lastBuildDate>
 		<atom:link href="https://mauilion.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Kind Persistent Volumes</title>
+			<link>https://mauilion.dev/posts/kind-pvc/</link>
+			<pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+			
+			<guid>https://mauilion.dev/posts/kind-pvc/</guid>
+			<description>&lt;p&gt;Hey Frens! This week we are exploring portable persistent volumes in kind!
+This is a pretty neat and funky trick!&lt;/p&gt;</description>
+			<content type="html"><![CDATA[<p>Hey Frens! This week we are exploring portable persistent volumes in kind!
+This is a pretty neat and funky trick!</p>
+<h2 id="introduction">Introduction</h2>
+<p>This article is going to explore three different ways to expose <a href="docs.k8s.io/concepts/storage/persistent-volumes">persistent
+volumes</a> with
+<a href="sigs.k8s.io/kind">kind</a></p>
+<h3 id="use-cases">Use Cases</h3>
+<p>Assuming we are using a local kind cluster.</p>
+<ol>
+<li>
+<p>default storage class:
+I want there to be a built in storage class so that I can deploy
+applications that request persistent volume claims.</p>
+</li>
+<li>
+<p>pod restart:
+If my pod restarts I want that pod to be scheduled such that the persistent
+volume claim is available to my pod. This ensures that if I have to restart
+and my pod will always come back with access to the same data.</p>
+</li>
+<li>
+<p>volume mobility:
+I want to be able to schedule my pod to multiple nodes and have it access
+the same persistent volume claim. This requires that the peristent volume
+be made available to all nodes.</p>
+</li>
+<li>
+<p>local data:
+I have a bunch of data locally that I want to expose to pods running in a
+kind cluster.</p>
+</li>
+<li>
+<p>restore volumes:
+I want to be able to bring up a kind cluster and regain access to a
+previously provisioned persistent volume claim.</p>
+</li>
+</ol>
+<h3 id="the-built-in-storage-provider">The built in storage provider</h3>
+<p>KinD makes use of Ranchers <a href="https://github.com/rancher/local-path-provisioner">local path persistent storage solution</a>.</p>
+<p>With this provider we can solve for the first two use cases: default storage class and pod restart.</p>
+<p>This solution is registered as the default storageclass on your kind cluster.
+You can see this by looking at:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kubectl get storageclass
+</code></pre></div><p>This solution relies on a deployment of some resources in the
+<code>local-path-storage</code> namespace.</p>
+<p>Now the way this storage solution works. When a pvc is created the persistent
+volume will be dynamically created on the node that the pod is scheduled to. As part of the provisioning the persistent volume has the following appended to it.</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Spec</span><span class="p">:</span> <span class="nx">v1</span><span class="p">.</span><span class="nx">PersistentVolumeSpec</span><span class="p">{</span>
+	<span class="nx">PersistentVolumeReclaimPolicy</span><span class="p">:</span> <span class="o">*</span><span class="nx">opts</span><span class="p">.</span><span class="nx">StorageClass</span><span class="p">.</span><span class="nx">ReclaimPolicy</span><span class="p">,</span>
+	<span class="nx">AccessModes</span><span class="p">:</span>                   <span class="nx">pvc</span><span class="p">.</span><span class="nx">Spec</span><span class="p">.</span><span class="nx">AccessModes</span><span class="p">,</span>
+	<span class="nx">VolumeMode</span><span class="p">:</span>                    <span class="o">&amp;</span><span class="nx">fs</span><span class="p">,</span>
+	<span class="nx">Capacity</span><span class="p">:</span> <span class="nx">v1</span><span class="p">.</span><span class="nx">ResourceList</span><span class="p">{</span>
+		<span class="nx">v1</span><span class="p">.</span><span class="nf">ResourceName</span><span class="p">(</span><span class="nx">v1</span><span class="p">.</span><span class="nx">ResourceStorage</span><span class="p">):</span> <span class="nx">pvc</span><span class="p">.</span><span class="nx">Spec</span><span class="p">.</span><span class="nx">Resources</span><span class="p">.</span><span class="nx">Requests</span><span class="p">[</span><span class="nx">v1</span><span class="p">.</span><span class="nf">ResourceName</span><span class="p">(</span><span class="nx">v1</span><span class="p">.</span><span class="nx">ResourceStorage</span><span class="p">)],</span>
+	<span class="p">},</span>
+	<span class="nx">PersistentVolumeSource</span><span class="p">:</span> <span class="nx">v1</span><span class="p">.</span><span class="nx">PersistentVolumeSource</span><span class="p">{</span>
+		<span class="nx">HostPath</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">v1</span><span class="p">.</span><span class="nx">HostPathVolumeSource</span><span class="p">{</span>
+			<span class="nx">Path</span><span class="p">:</span> <span class="nx">path</span><span class="p">,</span>
+			<span class="nx">Type</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">hostPathType</span><span class="p">,</span>
+		<span class="p">},</span>
+	<span class="p">},</span>
+	<span class="nx">NodeAffinity</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">v1</span><span class="p">.</span><span class="nx">VolumeNodeAffinity</span><span class="p">{</span>
+		<span class="nx">Required</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">v1</span><span class="p">.</span><span class="nx">NodeSelector</span><span class="p">{</span>
+			<span class="nx">NodeSelectorTerms</span><span class="p">:</span> <span class="p">[]</span><span class="nx">v1</span><span class="p">.</span><span class="nx">NodeSelectorTerm</span><span class="p">{</span>
+				<span class="p">{</span>
+					<span class="nx">MatchExpressions</span><span class="p">:</span> <span class="p">[]</span><span class="nx">v1</span><span class="p">.</span><span class="nx">NodeSelectorRequirement</span><span class="p">{</span>
+						<span class="p">{</span>
+							<span class="nx">Key</span><span class="p">:</span>      <span class="nx">KeyNode</span><span class="p">,</span>
+							<span class="nx">Operator</span><span class="p">:</span> <span class="nx">v1</span><span class="p">.</span><span class="nx">NodeSelectorOpIn</span><span class="p">,</span>
+							<span class="nx">Values</span><span class="p">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+								<span class="nx">node</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span>
+							<span class="p">},</span>
+						<span class="p">},</span>
+					<span class="p">},</span>
+				<span class="p">},</span>
+			<span class="p">},</span>
+		<span class="p">},</span>
+	<span class="p">},</span>
+<span class="p">},</span>
+</code></pre></div><p><a href="https://github.com/rancher/local-path-provisioner/blob/master/provisioner.go#L205-L238">source</a></p>
+<p>This means that in the case of pod failure or restart the pod will only be
+scheduled to the node where the persistent volume was allocated. If that node is
+not available then the pod will not schedule.</p>
+<p>For most use cases in Kind this solution will work great!</p>
+<p>Let&rsquo;s take a look at how this works in practice.</p>
+<p>In this demonstration we will:</p>
+<ul>
+<li>create a multi node kind cluster</li>
+<li>schedule a pod with a pvc</li>
+<li>evict the pod from the node it was scheduled to</li>
+<li>see if the pod is rescheduled.</li>
+<li>allow the pod to be scheduled on the original node.</li>
+</ul>
+<p>
+    <asciinema-player
+        src="/casts/kind-pvc-default.cast"
+        cols="200"
+        rows="35"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+<h4 id="what-about-restore-volumes-use-case">What about &ldquo;restore volumes&rdquo; use case?</h4>
+<p>To support restoring volumes from previous kind cluster we need to do a couple
+of things. We need to mount the directory that the storage provider will use to
+create persistent volumes so that we have the data to restore. We also need to
+backup the persistent volume resources so that we can reuse them on restart!</p>
+<p>The local-path-provisioner is configured via a <code>configmap</code> in the local-path-storage namespace. It looks looks like this!</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">$<span class="w"> </span>kubectl<span class="w"> </span>describe<span class="w"> </span>configmaps<span class="w"> </span>-n<span class="w"> </span>local-path-storage<span class="w"> </span>local-path-config<span class="w"> 
+</span><span class="w">
+</span><span class="w"></span><span class="k">Name</span><span class="p">:</span><span class="w">         </span>local-path-config<span class="w">
+</span><span class="w"></span><span class="k">Namespace</span><span class="p">:</span><span class="w">    </span>local-path-storage<span class="w">
+</span><span class="w"></span><span class="k">Labels</span><span class="p">:</span><span class="w">       </span>&lt;none&gt;<span class="w">
+</span><span class="w"></span><span class="k">Annotations</span><span class="p">:</span><span class="w">  
+</span><span class="w"></span>Data<span class="w">
+</span><span class="w"></span>====<span class="w">
+</span><span class="w"></span><span class="k">config.json</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>----<span class="w">
+</span><span class="w"></span>{<span class="w">
+</span><span class="w">        </span><span class="s2">&#34;nodePathMap&#34;</span><span class="p">:[</span><span class="w">
+</span><span class="w">        </span>{<span class="w">
+</span><span class="w">                </span><span class="s2">&#34;node&#34;</span><span class="p">:</span><span class="s2">&#34;DEFAULT_PATH_FOR_NON_LISTED_NODES&#34;</span><span class="p">,</span><span class="w">
+</span><span class="w">                </span><span class="s2">&#34;paths&#34;</span><span class="p">:[</span><span class="s2">&#34;/var/local-path-provisioner&#34;</span><span class="p">]</span><span class="w">
+</span><span class="w">        </span>}<span class="w">
+</span><span class="w">        </span><span class="p">]</span><span class="w">
+</span><span class="w"></span>}<span class="w">
+</span><span class="w"></span><span class="k">Events</span><span class="p">:</span><span class="w">  </span>&lt;none<span class="sd">&gt;
+</span><span class="sd">
+</span></code></pre></div><p>This configuration means that on each node in the cluster the provisioner will
+use the /var/local-path-provisioner directory to provision new persistent
+volumes!</p>
+<p>Let&rsquo;s check that out.</p>
+<p>In this demonstration we will:</p>
+<ul>
+<li>bring up a multi node kind cluster with /var/local-path-provisioner mounted from the host</li>
+<li>apply our sample pvc-test.yaml and create a deployment and pvc.</li>
+<li>show that the persistent volume is in our shared directory</li>
+<li>backup the persistent volume configuration</li>
+<li>modify the persistent volume configuration</li>
+<li>delete and recreate the kind cluster</li>
+<li>restore the persistent volume configuration</li>
+<li>redeploy the app and the pvc and show that the data has been restored.</li>
+</ul>
+<p>
+    <asciinema-player
+        src="/casts/kind-pvc-default-persist.cast"
+        cols="200"
+        rows="35"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+<p>The important bit there is that we needed to modify the old persistent volume
+manifest to change the retention policy to Retain or when we apply it. It will
+be immediately deleted.</p>
+<p>We also kept the claim and node affinity information in the manifest.</p>
+<p>One of the things we have not addressed is making sure the workload detaches
+from the storage before deleting the cluster! in some cases your data might be
+corrupted if you didn&rsquo;t safely shut the app down before deleting the cluster!</p>
+<h3 id="use-case-volume-mobility">Use Case &ldquo;Volume Mobility&rdquo;</h3>
+<p>For this we are going to use a different storage provider! Our intent is to
+still provide dynamic creation of pvcs but not to configure the pvcs with node
+affinity.</p>
+<p>Fortunately there is an example implementation in the sigs.k8s.io repo!
+You can check it out
+<a href="https://github.com/kubernetes-sigs/sig-storage-lib-external-provisioner">here</a></p>
+<p>For us to use this we need to build it and host it somewhere our kind cluster
+can access it. We also need a manifest that will deploy and configure it.</p>
+<p>I&rsquo;ve already built and pushed the container to
+<a href="https://hub.docker.com/layers/mauilion/hostpath-provisioner/dev/images/sha256-cdab86923c5a3d5e389818d7c192ed4488f3d7a272c892432378d53b900c8dee">mauilion/hostpath-provisioner:dev</a></p>
+<p>The manifest I built for this example is below</p>
+<p>{{ gist mauilion 1b5727f42d181f36bb934656fa50459a &ldquo;hostpath.yaml&rdquo; }}</p>
+<p>Now to use this we are going to modify our kind cluster to override the shared
+mount and the &ldquo;default storageClass&rdquo; implementation that kind deploys.</p>
+<p>Here is a look at our new kind config</p>
+<p>{{ gist mauilion 1b5727f42d181f36bb934656fa50459a &ldquo;kind-hostpath-dynamic.yaml&rdquo;
+}}</p>
+<p>Note that the mount path has changed and we are overriding the
+&ldquo;/kind/manifests/default-storage.yaml&rdquo; file on the first control-plane node. We
+are doing that because by default kind will apply that manifest to configure
+storage for the cluster.</p>
+<p>Let&rsquo;s see if it works!</p>
+<p>We will:</p>
+<ul>
+<li>fetch our kind-pvc-hostpath.yaml</li>
+<li>bring up a multi node cluster with shared storage</li>
+<li>deploy our example deployment and pvc with git.io/pvc-test.yaml</li>
+<li>populate some data in the pvc.</li>
+<li>Then we will drain the node and see the pod created on a different node.</li>
+<li>show the pod rescheduled and that the data is still accessible</li>
+<li>backup and modify the persistent volume</li>
+<li>recreate the kind cluster</li>
+<li>show that we can restore the persistent volume</li>
+</ul>
+<p>
+    <asciinema-player
+        src="/casts/kind-pvc-default-hostpath.cast"
+        cols="200"
+        rows="35"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+<h3 id="resources">Resources</h3>
+<p>I am using kind version v0.8.1</p>
+<pre><code>$ kind version
+kind v0.8.1 go1.14.2 linux/amd64
+</code></pre><p>I&rsquo;ve made a simple deployment and pvc to play with. It&rsquo;s available at
+git.io/pvc-test.yaml.</p>
+<script type="application/javascript" src="https://gist.github.com/mauilion/1b5727f42d181f36bb934656fa50459a.js?file=pvc-test.yaml"></script>
+
+<p>All of the other resources including the kind configurations can be found
+<a href="https://gist.github.com/mauilion/1b5727f42d181f36bb934656fa50459a">here</a></p>
+<p>A quick way to set things up is to use git to check them all out!</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">git clone https://gist.github.com/mauilion/1b5727f42d181f36bb934656fa50459a  pvc
+</code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>Using Kind to test a pr for Kubernetes.</title>
@@ -19,16 +277,10 @@
 https://github.com/kubernetes/kubernetes/pull/77523
 In this post I want to show a few things.
  setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prerequisites There is a pretty handy tool called gimme put out by the travis-ci folks.</description>
-			<content type="html"><![CDATA[
-
-<h2 id="setup">Setup</h2>
-
+			<content type="html"><![CDATA[<h2 id="setup">Setup</h2>
 <p>I am looking to validate a set of changes produced by this PR.</p>
-
-<p><a href="https://github.com/kubernetes/kubernetes/pull/77523" rel="nofollow noreferrer" target="_blank">https://github.com/kubernetes/kubernetes/pull/77523</a></p>
-
+<p><a href="https://github.com/kubernetes/kubernetes/pull/77523">https://github.com/kubernetes/kubernetes/pull/77523</a></p>
 <p>In this post I want to show a few things.</p>
-
 <ol>
 <li>setup a go environment.</li>
 <li>build kind</li>
@@ -38,25 +290,15 @@ In this post I want to show a few things.
 <li>bring up a cluster with that image</li>
 <li>validate that the changes have the desired affect.</li>
 </ol>
-
 <h3 id="prerequisites">Prerequisites</h3>
-
 <p>There is a pretty handy tool called <code>gimme</code> put out by the travis-ci folks.</p>
-
 <p>This in my opinion is the &ldquo;best&rdquo; way to setup a go environment.</p>
-
-<p>Read more about it <a href="https://github.com/travis-ci/gimme" rel="nofollow noreferrer" target="_blank">here</a></p>
-
-<p>For this setup I am going to leverage <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> to configure go.</p>
-
-<p>We need a system that has <a href="https://github.com/travis-ci/gimme#installation--usage" rel="nofollow noreferrer" target="_blank">gimme</a> and <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> installed.</p>
-
+<p>Read more about it <a href="https://github.com/travis-ci/gimme">here</a></p>
+<p>For this setup I am going to leverage <a href="https://direnv.net/">direnv</a> to configure go.</p>
+<p>We need a system that has <a href="https://github.com/travis-ci/gimme#installation--usage">gimme</a> and <a href="https://direnv.net/">direnv</a> installed.</p>
 <p>I will refer you to the instructions in the above links to get this stuff setup in your environment :)</p>
-
-<h3 id="let-s-get-started-with-go">Let&rsquo;s get started with go!</h3>
-
+<h3 id="lets-get-started-with-go">Let&rsquo;s get started with go!</h3>
 <p>For this next bit I have created a repo you can checkout and make use of.</p>
-
 <p>
     <asciinema-player
         src="/casts/k8dev-go.cast"
@@ -77,12 +319,9 @@ In this post I want to show a few things.
         
     ></asciinema-player>
 </p>
-
-<p>In the cast you can see us checking out <a href="https://github.com/mauilion/k8s-dev" rel="nofollow noreferrer" target="_blank">mauilion/k8s-dev</a>
+<p>In the cast you can see us checking out <a href="https://github.com/mauilion/k8s-dev">mauilion/k8s-dev</a>
 Then we move into the directory and use gimme to configure go via direnv.</p>
-
 <p>We then edit the <code>.envrc</code> file.</p>
-
 <p>I want to take a second to explain why.</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">unset</span> GOOS<span class="p">;</span>
 <span class="nb">unset</span> GOARCH<span class="p">;</span>
@@ -90,36 +329,24 @@ Then we move into the directory and use gimme to configure go via direnv.</p>
 <span class="nb">export</span> <span class="nv">GOPATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>
 <span class="nb">export</span> <span class="nv">GOROOT</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/versions/go1.12.5.linux.amd64&#39;</span><span class="p">;</span>
 <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">GOPATH</span><span class="si">}</span><span class="s2">/bin:/home/dcooley/.gimme/versions/go1.12.5.linux.amd64/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">;</span>
-go version &gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span>
+go version &gt;<span class="p">&amp;</span>2<span class="p">;</span>
 
-<span class="nb">export</span> <span class="nv">GIMME_ENV</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/envs/go1.12.5.linux.amd64.env&#39;</span><span class="p">;</span></code></pre></div>
-<p>I added the <code>GOPATH</code> variable to ensure that when invoked go considers <code>/home/dcooley/k8s-dev</code> the path for go. This is how we can be sure that things like <code>go get -d k8s.io/kubernetes sigs.k8s.io/kind</code> will pull the src into that directory.
+<span class="nb">export</span> <span class="nv">GIMME_ENV</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/envs/go1.12.5.linux.amd64.env&#39;</span><span class="p">;</span>
+
+</code></pre></div><p>I added the <code>GOPATH</code> variable to ensure that when invoked go considers <code>/home/dcooley/k8s-dev</code> the path for go. This is how we can be sure that things like <code>go get -d k8s.io/kubernetes sigs.k8s.io/kind</code> will pull the src into that directory.
 This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the location of your checkout of <code>k8s.io/kubernetes</code> as part of the <code>kind build node-image</code> step it will follow the defined <code>GOPATH</code>.</p>
-
 <p>I am also prepending <code>${GOPATH}/bin</code> to the <code>${PATH}</code> variable. So that when we build <code>kind</code>. The <code>kind</code> binary will be in our path. You can also just put <code>kind</code> i</p>
-
-<h3 id="let-s-build-our-kind-node-images">Let&rsquo;s build our kind node-images</h3>
-
+<h3 id="lets-build-our-kind-node-images">Let&rsquo;s build our kind node-images</h3>
 <p>Ok next up we need to build our images.</p>
-
 <p>Since we checked out <code>k8s.io/kubernetes</code> into <code>${GOPATH}/src/k8s.io/kubernetes</code> we can just run <code>kind build node-image --image=mauilion/node:master</code></p>
-
 <p>This will create an image in my local docker image cache named <code>mauilion/node:master</code></p>
-
 <p>Once complete we also have to build the image based on the PR that Andrew provided.</p>
-
 <p>In the ticket we can see src of Andrews PR. <code>andrewsykim:fix-xlb-from-local</code></p>
-
 <p>So we need to grab that branch and build another image.</p>
-
 <p>The way I do this so as not to mess up the import paths and such is to move into <code>${GOPATH}/src/k8s.io/kubernetes</code> and run <code>git remote add andrewsykim git@github.com:andrewsykim\kubernetes</code></p>
-
 <p>Since Andrew is pushing his code to a branch <code>fix-xlb-from-local</code> of his fork <code>git@github.com:andrewsykim/kubernetes</code> of <code>k8s.io/kubernetes</code></p>
-
 <p>Once the remote is added I can do a <code>git fetch --all</code> and that will pull down all the known branches from all the remotes.</p>
-
 <p>Then we can switch to Andrews branch and build a new <code>kind node-image</code></p>
-
 <p>
     <asciinema-player
         src="/casts/k8dev-build.cast"
@@ -140,23 +367,14 @@ This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the loc
         
     ></asciinema-player>
 </p>
-
 <p>Before we move on. Let&rsquo;s talk about what&rsquo;s happening when we run <code>kind build node-image --image=mauilion/node:77523</code></p>
-
 <p><code>kind</code> is setup to build this image using a container build of kubernetes. This means that <code>kind</code> will &ldquo;detect&rdquo; where your local checkout of <code>k8s.io/kubernetes</code> is via your <code>${GOPATH}</code> then mount that into a container and build all the bits.</p>
-
 <p>the node image will contain all binaries and images needed to run kubernetes as produced from your local checkout of the source.</p>
-
 <p>This is a PRETTY DARN COOL thing!</p>
-
 <p>This means that I can easily setup an environment that will allow me to dig into and validate particular behavior.</p>
-
 <p>Also this is a way to iterate over changes to the codebase.</p>
-
 <p>Alright let&rsquo;s move on.</p>
-
-<h3 id="let-s-bring-up-our-clusters">Let&rsquo;s bring up our clusters</h3>
-
+<h3 id="lets-bring-up-our-clusters">Let&rsquo;s bring up our clusters</h3>
 <p>In the repo I&rsquo;ve the following directory structure:</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kind/
 ├── <span class="m">77523</span>              <span class="c1"># a repo with the bits for the 77523 clusters</span>
@@ -168,18 +386,16 @@ This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the loc
     ├── .envrc
     ├── config
     ├── km-config.yaml
-    └── test.yaml</code></pre></div>
-<p>In the cast below you can see that we are moving into the directory for each cluster. If you take a look at the .envrc in the directory you can see we are using direnv to export <code>KUBECONFIG</code> and configure <code>kubectl</code>. This is also where the resources for this cluster are defined.
+    └── test.yaml
+</code></pre></div><p>In the cast below you can see that we are moving into the directory for each cluster. If you take a look at the .envrc in the directory you can see we are using direnv to export <code>KUBECONFIG</code> and configure <code>kubectl</code>. This is also where the resources for this cluster are defined.
 We then run something like:</p>
-
 <pre><code>kind create cluster --config config --name=master --image=mauilion/node:master
-</code></pre>
-
-<p>This does a few things.
-* It creates a cluster where the nodes will follow a naming convention we use in our statically defined test.yaml
-* It will use the node-image that we created in the <code>build</code> step.
-* It will use the config defined and create a cluster of 1 control plane node and 2 worker nodes.</p>
-
+</code></pre><p>This does a few things.</p>
+<ul>
+<li>It creates a cluster where the nodes will follow a naming convention we use in our statically defined test.yaml</li>
+<li>It will use the node-image that we created in the <code>build</code> step.</li>
+<li>It will use the config defined and create a cluster of 1 control plane node and 2 worker nodes.</li>
+</ul>
 <p>
     <asciinema-player
         src="/casts/k8dev-cluster-up.cast"
@@ -200,60 +416,39 @@ We then run something like:</p>
         
     ></asciinema-player>
 </p>
-
-<h3 id="now-for-the-fun-bit-let-s-validate">Now for the fun bit. Let&rsquo;s validate</h3>
-
+<h3 id="now-for-the-fun-bit-lets-validate">Now for the fun bit. Let&rsquo;s validate</h3>
 <p>This PR is setup to fix a behavior in the way that <code>externalTrafficPolicy: Local</code> works.</p>
-
 <h4 id="the-problem">The problem:</h4>
-
 <p>If we bringup a pod on one of two workers and expose that pod with a service of type LoadBalancer.
 And that service is configured with <code>externalTrafficPolicy: Local</code>.
 A pod that is configured with <code>hostNetwork: True</code> on the node where the pod is not will fail to connect to the external lb ip. That traffic will be dropped.</p>
-
 <h4 id="the-fix">The fix:</h4>
-
 <p>To fix this behavior Andrew has implemented a another iptables rule.</p>
-
 <pre><code>-A KUBE-XLB-ECF5TUORC5E2ZCRD -s 10.8.0.0/14 -m comment --comment &quot;Redirect pods trying to reach external loadbalancer VIP to clusterIP&quot; -j KUBE-SVC-ECF5TUORC5E2ZCRD
-</code></pre>
-
-<p>This change enables traffic for a svc from a pod or from the host to be redirected to the service defined by kube-proxy.</p>
-
+</code></pre><p>This change enables traffic for a svc from a pod or from the host to be redirected to the service defined by kube-proxy.</p>
 <h4 id="our-testing-setup">Our testing setup:</h4>
-
-<p>We have brought up 2 clusters:
-* master
-* 77523</p>
-
+<p>We have brought up 2 clusters:</p>
+<ul>
+<li>master</li>
+<li>77523</li>
+</ul>
 <p>Into each of them we have deployed our test.yaml and metallb and a config for metallb.</p>
-
 <p>The test.yaml is a set of pods that are statically defined.
 By that I mean that each pod is scheduled to a specific node. We do this by configuring <code>nodeName</code> in the pod spec.</p>
-
 <p>There are 5 pods that we are deploying.
 <code>echo-77523-worker2</code>
 <code>netshoot-77523-worker</code>
 <code>netshoot-77523-worker2</code>
 <code>overlay-77523-worker</code>
 <code>overlay-77523-worker2</code></p>
-
-<p>The echo pod is using <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">inanimate/echo-server</a> and from the name you can see that this will be deployed on worker2.</p>
-
+<p>The echo pod is using <a href="https://github.com/InAnimaTe/echo-server">inanimate/echo-server</a> and from the name you can see that this will be deployed on worker2.</p>
 <p>The netshoot pods are set with <code>hostNetwork: True</code> This means that if you exec into the pod you can see the ip stack of the underlying node.</p>
-
 <p>The overlay pods are the same except they are deployed as part of the overlay network and will be given a <code>pod ip</code></p>
-
-<p>The netshoot and overlay pods are both using <a href="https://github.com/nicolaka/netshoot" rel="nofollow noreferrer" target="_blank">nicolaka/netshoot</a></p>
-
+<p>The netshoot and overlay pods are both using <a href="https://github.com/nicolaka/netshoot">nicolaka/netshoot</a></p>
 <p>We also define a svc of type LoadBalancer in each of our clusters.</p>
-
 <p>for our <code>master</code> cluster we use <code>172.17.255.1:8080</code> and on the <code>77523</code> cluster it&rsquo;s <code>172.17.254.1:8080</code></p>
-
-<p>I am using metallb for this you can read more about metallb <a href="https://metallb.universe.tf/" rel="nofollow noreferrer" target="_blank">here</a>. More about how I use it with kind <a href="https://mauilion.dev/posts/kind-metallb/" rel="nofollow noreferrer" target="_blank">here</a></p>
-
-<h4 id="let-s-test-it">Let&rsquo;s test it!</h4>
-
+<p>I am using metallb for this you can read more about metallb <a href="https://metallb.universe.tf/">here</a>. More about how I use it with kind <a href="https://mauilion.dev/posts/kind-metallb/">here</a></p>
+<h4 id="lets-test-it">Let&rsquo;s test it!</h4>
 <p>From our understanding of the problem I expect that if exec into the <code>netshoot-master-worker</code> pod I will not be able to <code>curl 172.17.255.1:8080</code>
 <p>
     <asciinema-player
@@ -275,7 +470,6 @@ By that I mean that each pod is scheduled to a specific node. We do this by conf
         
     ></asciinema-player>
 </p></p>
-
 <p>if we try from the <code>77523</code> cluster we can see that it does work!
 <p>
     <asciinema-player
@@ -297,9 +491,7 @@ By that I mean that each pod is scheduled to a specific node. We do this by conf
         
     ></asciinema-player>
 </p></p>
-
 <p>Why does it work now tho?</p>
-
 <p>
     <asciinema-player
         src="/casts/k8dev-why.cast"
@@ -320,46 +512,29 @@ By that I mean that each pod is scheduled to a specific node. We do this by conf
         
     ></asciinema-player>
 </p>
-
 <p>In the master cluster we can chase down the XLB entry and it looks like this:</p>
-
 <pre><code>:KUBE-XLB-U52O5CQH2XXNVZ54 - [0:0]
 -A KUBE-FW-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: loadbalancer IP&quot; -j KUBE-XLB-U52O5CQH2XXNVZ54
 -A KUBE-NODEPORTS -p tcp -m comment --comment &quot;default/echo:&quot; -m tcp --dport 30012 -j KUBE-XLB-U52O5CQH2XXNVZ54
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: has no local endpoints&quot; -j KUBE-MARK-DROP
 
-</code></pre>
-
-<p>in the 77523 cluster:</p>
-
+</code></pre><p>in the 77523 cluster:</p>
 <pre><code>:KUBE-XLB-U52O5CQH2XXNVZ54 - [0:0]
 -A KUBE-FW-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: loadbalancer IP&quot; -j KUBE-XLB-U52O5CQH2XXNVZ54
 -A KUBE-NODEPORTS -p tcp -m comment --comment &quot;default/echo:&quot; -m tcp --dport 31972 -j KUBE-XLB-U52O5CQH2XXNVZ54
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;masquerade LOCAL traffic for default/echo: LB IP&quot; -m addrtype --src-type LOCAL -j KUBE-MARK-MASQ
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;route LOCAL traffic for default/echo: LB IP to service chain&quot; -m addrtype --src-type LOCAL -j KUBE-SVC-U52O5CQH2XXNVZ54
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: has no local endpoints&quot; -j KUBE-MARK-DROP
-</code></pre>
-
-<p>The rules that Andrew&rsquo;s patch adds are:</p>
-
+</code></pre><p>The rules that Andrew&rsquo;s patch adds are:</p>
 <pre><code>-A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;masquerade LOCAL traffic for default/echo: LB IP&quot; -m addrtype --src-type LOCAL -j KUBE-MARK-MASQ
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;route LOCAL traffic for default/echo: LB IP to service chain&quot; -m addrtype --src-type LOCAL -j KUBE-SVC-U52O5CQH2XXNVZ54
-</code></pre>
-
-<p>And the comments make it pretty clear what&rsquo;s happening!</p>
-
+</code></pre><p>And the comments make it pretty clear what&rsquo;s happening!</p>
 <h3 id="wrap-up">Wrap up!</h3>
-
 <p>Let&rsquo;s make sure you wipe out those clusters.</p>
-
 <pre><code>kind delete cluster --name=master
 kind delete cluster --name=77523
-</code></pre>
-
-<p>Also consider running <code>docker system prune --all</code> and <code>docker volume prune</code> every so often to keep your dockers cache tidy :)</p>
-
-<p>shout-out to <a href="https://twitter.com/a_sykim" rel="nofollow noreferrer" target="_blank">@a_sykim</a> you should follow him on twitter he&rsquo;s great!</p>
-
+</code></pre><p>Also consider running <code>docker system prune --all</code> and <code>docker volume prune</code> every so often to keep your dockers cache tidy :)</p>
+<p>shout-out to <a href="https://twitter.com/a_sykim">@a_sykim</a> you should follow him on twitter he&rsquo;s great!</p>
 <p>Thanks!</p>
 ]]></content>
 		</item>
@@ -372,25 +547,15 @@ kind delete cluster --name=77523
 			<guid>https://mauilion.dev/posts/kind-metallb/</guid>
 			<description>Preamble: When using metallb with kind we are going to deploy it in l2-mode. This means that we need to be able to connect to the ip addresses of the node subnet. If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.
 If you are using a Mac this tutorial may not be super useful as the way Docker Desktop works on a Mac doesn&amp;rsquo;t expose the &amp;ldquo;docker network&amp;rdquo; to the underlying host.</description>
-			<content type="html"><![CDATA[
-
-<h3 id="preamble">Preamble:</h3>
-
+			<content type="html"><![CDATA[<h3 id="preamble">Preamble:</h3>
 <p>When using metallb with kind we are going to deploy it in <code>l2-mode</code>. This means that we need to be able to connect to the ip addresses of the node subnet.
 If you are using linux to host a kind cluster. You will not need to do this as the kind node ip addresses are directly attached.</p>
-
 <p>If you are using a Mac this tutorial may not be super useful as the way Docker Desktop works on a Mac doesn&rsquo;t expose the &ldquo;docker network&rdquo; to the underlying host. Due to this restriction I recommend that you make do with <code>kubectl proxy</code></p>
-
 <h3 id="problem-statement">Problem Statement:</h3>
-
 <p>Kubernetes on bare metal doesn&rsquo;t come with an easy integration for things like services of type LoadBalancer.</p>
-
 <p>This mechanism is used to expose services inside the cluster using an external Load Balancing mechansim that understands how to route traffic down to the pods defined by that service.</p>
-
 <p>Most implementations of this are relatively naive. They place all of the available nodes behind the load balancer and use tcp port knocking to determine if the node is &ldquo;healthy&rdquo; enough to forward traffic to it.</p>
-
 <p>You can define an <code>externalTrafficPolicy</code> on a service of type <code>LoadBalancer</code> and this can help get the behaviour that you want. From the docs:</p>
-
 <pre><code>$ kubectl explain service.spec.externalTrafficPolicy
 KIND:     Service
 VERSION:  v1
@@ -404,33 +569,22 @@ DESCRIPTION:
      services, but risks potentially imbalanced traffic spreading. &quot;Cluster&quot;
      obscures the client source IP and may cause a second hop to another node,
      but should have good overall load-spreading.
-</code></pre>
-
-<p>And Metallb has a decent write up on what they do when you configure this stuff:</p>
-
-<p><a href="https://metallb.universe.tf/usage/#traffic-policies" rel="nofollow noreferrer" target="_blank">https://metallb.universe.tf/usage/#traffic-policies</a></p>
-
+</code></pre><p>And Metallb has a decent write up on what they do when you configure this stuff:</p>
+<p><a href="https://metallb.universe.tf/usage/#traffic-policies">https://metallb.universe.tf/usage/#traffic-policies</a></p>
 <p>With Metallb there are a different set of assumptions.</p>
-
 <p>Metallb can operate in two distinct modes.</p>
-
 <p>A Layer 2 mode that will use vrrp to arp out for the external ip or VIP on the lan. This means that all traffic for the service will be attracted to only one node and dispersed across the pods defined by the service fromt there.</p>
-
 <p>A bgp mode with <code>externalTrafficPolicy: local</code> metallb will announce the external ip or VIP from all of the nodes where at least one pod is running.</p>
-
 <p>the bgp mode relies on ecmp to balance traffic back to the pods. ECMP is a great solution for this problem and I HIGHLY recommend you use this model if you can.</p>
-
 <p>That said I haven&rsquo;t created a bgp router for my kind cluster so we wil use the l2-mode for this experiment.</p>
-
-<h3 id="let-s-do-this-thing">Let&rsquo;s do this thing!</h3>
-
+<h3 id="lets-do-this-thing">Let&rsquo;s do this thing!</h3>
 <p>First let&rsquo;s bring up a 2 node kind cluster with the following config.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">kind<span class="p">:</span><span class="w"> </span>Cluster<span class="w">
-</span><span class="w"></span>apiVersion<span class="p">:</span><span class="w"> </span>kind.sigs.k8s.io/v1alpha3<span class="w">
-</span><span class="w"></span>nodes<span class="p">:</span><span class="w">
-</span><span class="w"></span>-<span class="w"> </span>role<span class="p">:</span><span class="w"> </span>control-plane<span class="w">
-</span><span class="w"></span>-<span class="w"> </span>role<span class="p">:</span><span class="w"> </span>worker</code></pre></div>
-<p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Cluster<span class="w">
+</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>kind.sigs.k8s.io/v1alpha3<span class="w">
+</span><span class="w"></span><span class="k">nodes</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w"> </span>control-plane<span class="w">
+</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w"> </span>worker<span class="w">
+</span></code></pre></div><p>
     <asciinema-player
         src="/casts/km-bringup.cast"
         cols="200"
@@ -450,9 +604,7 @@ DESCRIPTION:
         
     ></asciinema-player>
 </p>
-
 <p>Then we need to see if we can ping the node ip of the nodes themselves.</p>
-
 <p>
     <asciinema-player
         src="/casts/km-ping.cast"
@@ -473,11 +625,8 @@ DESCRIPTION:
         
     ></asciinema-player>
 </p>
-
 <p>At this point we need to determine the network that is being used for the node ip pool. Since kind nodes are associated with the docker network named &ldquo;bridge&rdquo; we can inspect that directly.</p>
-
-<p>I am using a pretty neat tool called <a href="https://github.com/simeji/jid" rel="nofollow noreferrer" target="_blank"><code>jid</code></a> here that is a repl for json.</p>
-
+<p>I am using a pretty neat tool called <a href="https://github.com/simeji/jid"><code>jid</code></a> here that is a repl for json.</p>
 <p>
     <asciinema-player
         src="/casts/km-inspect.cast"
@@ -498,17 +647,11 @@ DESCRIPTION:
         
     ></asciinema-player>
 </p>
-
 <p>So we can see that there is an allocated network of <code>172.17.0.0/16</code> in my case.</p>
-
 <p>Let&rsquo;s swipe the last 10 ip addresses from that allocation and use them for the metallb configuration.</p>
-
 <h3 id="now-we-are-going-to-deploy-a-service">Now we are going to deploy a service!</h3>
-
 <p>First let&rsquo;s create a service of type loadbalancer and see what happens before we install metallb.</p>
-
-<p>I am going to use the echo server for this. I prefer the one built by inanimate. Here is the <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">source</a> and image: <code>inanimate/echo-server</code></p>
-
+<p>I am going to use the echo server for this. I prefer the one built by inanimate. Here is the <a href="https://github.com/InAnimaTe/echo-server">source</a> and image: <code>inanimate/echo-server</code></p>
 <p>
     <asciinema-player
         src="/casts/km-echo1.cast"
@@ -529,15 +672,10 @@ DESCRIPTION:
         
     ></asciinema-player>
 </p>
-
 <p>We can see that the <code>EXTERNAL-IP</code> field is <code>pending</code>. This is because there is nothing available in the cluster to manage this type of service.</p>
-
 <h3 id="now-on-to-the-metallb-part">Now on to the metallb part!</h3>
-
-<p>First read the docs <a href="https://metallb.universe.tf/installation/" rel="nofollow noreferrer" target="_blank">https://metallb.universe.tf/installation/</a></p>
-
+<p>First read the docs <a href="https://metallb.universe.tf/installation/">https://metallb.universe.tf/installation/</a></p>
 <p>Then we can get started on installing this to our cluster.</p>
-
 <p>
     <asciinema-player
         src="/casts/km-metallb-install.cast"
@@ -558,32 +696,25 @@ DESCRIPTION:
         
     ></asciinema-player>
 </p>
-
 <p>We can see that metallb is now installed but we aren&rsquo;t done yet!</p>
-
 <p>now we need to add a configuration that will use a few of the unused ip addresses from the node ip pool (<code>172.17.0.0/16</code>)</p>
-
 <p>Now if we look at our existing service we can see that the <code>EXTERNAL-IP</code> is still <code>pending</code></p>
-
 <p>This is because we haven&rsquo;t yet applied the config for metallb.</p>
-
 <p>Here is the config:</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">apiVersion<span class="p">:</span><span class="w"> </span>v1<span class="w">
-</span><span class="w"></span>kind<span class="p">:</span><span class="w"> </span>ConfigMap<span class="w">
-</span><span class="w"></span>metadata<span class="p">:</span><span class="w">
-</span><span class="w">  </span>namespace<span class="p">:</span><span class="w"> </span>metallb-system<span class="w">
-</span><span class="w">  </span>name<span class="p">:</span><span class="w"> </span>config<span class="w">
-</span><span class="w"></span>data<span class="p">:</span><span class="w">
-</span><span class="w">  </span>config<span class="p">:</span><span class="w"> </span><span class="sd">|
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
+</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>ConfigMap<span class="w">
+</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">namespace</span><span class="p">:</span><span class="w"> </span>metallb-system<span class="w">
+</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>config<span class="w">
+</span><span class="w"></span><span class="k">data</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">config</span><span class="p">:</span><span class="w"> </span><span class="sd">|
 </span><span class="sd">    address-pools:</span><span class="w">
-</span><span class="w">    </span>-<span class="w"> </span>name<span class="p">:</span><span class="w"> </span>default<span class="w">
-</span><span class="w">      </span>protocol<span class="p">:</span><span class="w"> </span>layer2<span class="w">
-</span><span class="w">      </span>addresses<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="m">172.17</span>.<span class="m">255.1</span>-<span class="m">172.17</span>.<span class="m">255.250</span></code></pre></div>
-<p>You can apply this to your cluster with <code>kubectl apply -f https://git.io/km-config.yaml</code></p>
-
+</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>default<span class="w">
+</span><span class="w">      </span><span class="k">protocol</span><span class="p">:</span><span class="w"> </span>layer2<span class="w">
+</span><span class="w">      </span><span class="k">addresses</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="m">172.17.255.1-172.17.255.250</span><span class="w">
+</span></code></pre></div><p>You can apply this to your cluster with <code>kubectl apply -f https://git.io/km-config.yaml</code></p>
 <p>Let&rsquo;s see what happens when we apply this.</p>
-
 <p>
     <asciinema-player
         src="/casts/km-config.cast"
@@ -604,13 +735,9 @@ DESCRIPTION:
         
     ></asciinema-player>
 </p>
-
 <p>We can see the svc get&rsquo;s an ip address immediately.</p>
-
 <p>And we can curl it!</p>
-
-<p>That&rsquo;s all for now hit me up on <a href="https://twitter.com/mauilion" rel="nofollow noreferrer" target="_blank">twitter</a> or <a href="https://kubernetes.slack.com/team/U37TLLWAU" rel="nofollow noreferrer" target="_blank">k8s slack</a> with questions!</p>
-
+<p>That&rsquo;s all for now hit me up on <a href="https://twitter.com/mauilion">twitter</a> or <a href="https://kubernetes.slack.com/team/U37TLLWAU">k8s slack</a> with questions!</p>
 <p>Shout-out to Jan Guth for the idea on this post!</p>
 ]]></content>
 		</item>
@@ -626,33 +753,25 @@ It&amp;rsquo;s a great project and I end up using kind everyday to validate or d
 The slides that I presented are here: mauilion.github.io/kind-demo and a link to the repository with the deck and the content used to bring up the demo cluster is here: github.com/mauilion/kind-demo
 
 In the talk I dug in a bit about what kind and kubeadm are and what problems they solve.</description>
-			<content type="html"><![CDATA[<p>On 4/7/2019 I had the opportunity to talk to folks that attended the SF Kubernetes meetup <a href="https://www.meetup.com/San-Francisco-Kubernetes-Meetup/events/259713345/" rel="nofollow noreferrer" target="_blank">Anaplan</a> about kind!</p>
-
+			<content type="html"><![CDATA[<p>On 4/7/2019 I had the opportunity to talk to folks that attended the SF Kubernetes meetup <a href="https://www.meetup.com/San-Francisco-Kubernetes-Meetup/events/259713345/">Anaplan</a> about kind!</p>
 <p>It&rsquo;s a great project and I end up using kind everyday to validate or develop designs for Kubernetes clusters.</p>
-
-<p>The slides that I presented are here: <a href="https://mauilion.github.com/kind-demo" rel="nofollow noreferrer" target="_blank">mauilion.github.io/kind-demo</a> and a link to the repository with the deck and the content used to bring up the demo cluster is here: <a href="https://github.com/mauilion/kind-demo" rel="nofollow noreferrer" target="_blank">github.com/mauilion/kind-demo</a></p>
-
-<p><a href="https://mauilion.github.io/kind-demo" rel="nofollow noreferrer" target="_blank"><img src="/kind-slide.png" alt="" /></a></p>
-
+<p>The slides that I presented are here: <a href="https://mauilion.github.com/kind-demo">mauilion.github.io/kind-demo</a> and a link to the repository with the deck and the content used to bring up the demo cluster is here: <a href="https://github.com/mauilion/kind-demo">github.com/mauilion/kind-demo</a></p>
+<p><a href="https://mauilion.github.io/kind-demo"><img src="/kind-slide.png" alt=""></a></p>
 <p>In the talk I dug in a bit about what kind and kubeadm are and what problems they solve.</p>
-
 <p>I also demonstrated creating a 7 node cluster on my laptop live!</p>
-
 <p>Finally, we spent a little time talking about the way that Docker in Docker is being used here.</p>
-
 <p>My laptop is a recent Lenovo x1 carbon running Ubuntu and i3.</p>
-
 <p>When I bring up a kind cluster I can see the docker containers that I start with a simple <code>docker ps</code></p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ docker ps --no-trunc 
 CONTAINER ID                                                       IMAGE                  COMMAND                                  CREATED             STATUS              PORTS                                  NAMES
-b8f8ef6d2d97836dc66e09fe5e1a4c7e1b7a880c95372b8d4881288238985f22   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       <span class="m">36533</span>/tcp, <span class="m">127</span>.0.0.1:36533-&gt;6443/tcp   kind-external-load-balancer
-69daaf381d8a4dbafb1197502446858e9b6e9e950c0b8db1eb1759dc2883f3ec   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       <span class="m">34675</span>/tcp, <span class="m">127</span>.0.0.1:34675-&gt;6443/tcp   kind-control-plane3
-9f577280b62052d5caeecd7483e3283f01d3a3c784c4620efca15338cd0cad23   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       <span class="m">38847</span>/tcp, <span class="m">127</span>.0.0.1:38847-&gt;6443/tcp   kind-control-plane
+b8f8ef6d2d97836dc66e09fe5e1a4c7e1b7a880c95372b8d4881288238985f22   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       36533/tcp, 127.0.0.1:36533-&gt;6443/tcp   kind-external-load-balancer
+69daaf381d8a4dbafb1197502446858e9b6e9e950c0b8db1eb1759dc2883f3ec   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       34675/tcp, 127.0.0.1:34675-&gt;6443/tcp   kind-control-plane3
+9f577280b62052d5caeecd7483e3283f01d3a3c784c4620efca15338cd0cad23   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       38847/tcp, 127.0.0.1:38847-&gt;6443/tcp   kind-control-plane
 dfcab2e279ffbb2710dbdaa3386814887d081ddd378641777116b3fed131a3b0   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                                              kind-worker
-e486393a724079b77b4aaec5de18fd0aea70f9ce0b46bb6d45edb3382bf3cb32   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       <span class="m">35759</span>/tcp, <span class="m">127</span>.0.0.1:35759-&gt;6443/tcp   kind-control-plane2
+e486393a724079b77b4aaec5de18fd0aea70f9ce0b46bb6d45edb3382bf3cb32   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes       35759/tcp, 127.0.0.1:35759-&gt;6443/tcp   kind-control-plane2
 be76f1f1ba3c365a5058c2f46b555174c1c6b28418844621e31a2e2c548c5e5f   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                                              kind-worker2
-5a845004c40b035a198333a7f8c17eec8c3a024db15f484af4b5d7974e4c27db   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                                              kind-worker3</code></pre></div>
-<p>And if I exec into one of the control plane &ldquo;nodes&rdquo; and run docker ps:</p>
+5a845004c40b035a198333a7f8c17eec8c3a024db15f484af4b5d7974e4c27db   kindest/node:v1.13.4   <span class="s2">&#34;/usr/local/bin/entrypoint /sbin/init&#34;</span>   <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                                              kind-worker3
+</code></pre></div><p>And if I exec into one of the control plane &ldquo;nodes&rdquo; and run docker ps:</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">root@kind-control-plane:/# docker ps
 CONTAINER ID        IMAGE                  COMMAND                  CREATED             STATUS              PORTS               NAMES
 0904a715c607        18ee25ef69a8           <span class="s2">&#34;kube-controller-man…&#34;</span>   <span class="m">11</span> minutes ago      Up <span class="m">11</span> minutes                           k8s_kube-controller-manager_kube-controller-manager-kind-control-plane_kube-system_0139f650b0ebdfe8039809598eafaed5_1
@@ -666,51 +785,49 @@ f8ccefbb6faf        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</sp
 b2dab14dc554        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_kube-scheduler-kind-control-plane_kube-system_4b52d75cab61380f07c0c5a69fb371d4_0
 aa56021201fb        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_kube-controller-manager-kind-control-plane_kube-system_0139f650b0ebdfe8039809598eafaed5_0
 71d3e0cb6fe2        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_kube-apiserver-kind-control-plane_kube-system_36fd00068b02bdfc674c44e345a08553_0
-8a2e80860798        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_etcd-kind-control-plane_kube-system_a17306e4c3c6a492df6a1ccea459c458_0</code></pre></div>
-<p>and from the underlying node we can the processes that are related to the containers.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"> <span class="m">2572</span> ?        Ssl    <span class="m">1</span>:44 /usr/bin/dockerd --live-restore -H fd://
- <span class="m">2655</span> ?        Ssl    <span class="m">1</span>:40  <span class="se">\_</span> docker-containerd --config /var/run/docker/containerd/containerd.toml
-<span class="m">10669</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/9f577280b62052d5caeecd7483e3283f01d3a
-<span class="m">10801</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>   <span class="se">\_</span> /sbin/init
-<span class="m">14598</span> ?        S&lt;s    <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="se">\_</span> /lib/systemd/systemd-journald
-<span class="m">14736</span> ?        Ssl    <span class="m">2</span>:18  <span class="p">|</span>   <span class="p">|</span>       <span class="se">\_</span> /usr/bin/dockerd -H fd://
-<span class="m">14958</span> ?        Ssl    <span class="m">0</span>:33  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> docker-containerd --config /var/run/docker/containerd/containerd.toml
-<span class="m">22752</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/8a2e8086079885ea914c5
-<span class="m">22816</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">22762</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/71d3e0cb6fe2f988842bb
-<span class="m">22852</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">22777</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/aa56021201fb02aa8d855
-<span class="m">22846</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">22795</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/b2dab14dc554cdcf40e13
-<span class="m">22881</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">23015</span> ?        Sl     <span class="m">0</span>:03  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/37ce90751bb7b196243f1
-<span class="m">23061</span> ?        Ssl    <span class="m">4</span>:41  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> etcd --advertise-client-urls<span class="o">=</span>https://172.17.0.6:2379 --cert-file<span class="o">=</span>/etc/kubernetes/pki/etcd/server.crt --client-cert-auth<span class="o">=</span><span class="nb">true</span> --data-dir
-<span class="m">23066</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/3b722fb72dd30e8b3e07f
-<span class="m">23126</span> ?        Ssl    <span class="m">5</span>:30  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> kube-apiserver --authorization-mode<span class="o">=</span>Node,RBAC --advertise-address<span class="o">=</span><span class="m">172</span>.17.0.6 --allow-privileged<span class="o">=</span><span class="nb">true</span> --client-ca-file<span class="o">=</span>/etc/kubernetes/p
-<span class="m">24764</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/f8ccefbb6faf067876cf4
-<span class="m">24830</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">24779</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/57b9c22fa25a83e4c69ca
-<span class="m">24819</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
-<span class="m">24895</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/036e0f373c0bcac56484c
-<span class="m">24921</span> ?        Ssl    <span class="m">0</span>:18  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /usr/local/bin/kube-proxy --config<span class="o">=</span>/var/lib/kube-proxy/config.conf --hostname-override<span class="o">=</span>kind-control-plane
-<span class="m">26721</span> ?        Sl     <span class="m">0</span>:04  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/adb83f623945215c3597a
-<span class="m">26746</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /sbin/runsvdir -P /etc/service/enabled
-<span class="m">28040</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv bird6
-<span class="m">28242</span> ?        S      <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> bird6 -R -s /var/run/calico/bird6.ctl -d -c /etc/calico/confd/config/bird6.cfg
-<span class="m">28041</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv confd
-<span class="m">28047</span> ?        Sl     <span class="m">0</span>:28  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> calico-node -confd
-<span class="m">28042</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv felix
-<span class="m">28044</span> ?        Sl     <span class="m">2</span>:03  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> calico-node -felix
-<span class="m">28043</span> ?        Ss     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv bird
-<span class="m">28245</span> ?        S      <span class="m">0</span>:01  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>           <span class="se">\_</span> bird -R -s /var/run/calico/bird.ctl -d -c /etc/calico/confd/config/bird.cfg
-<span class="m">27663</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/cce01b13d1be8c0e434cb
-<span class="m">27701</span> ?        Ssl    <span class="m">1</span>:19  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> kube-scheduler --address<span class="o">=</span><span class="m">127</span>.0.0.1 --kubeconfig<span class="o">=</span>/etc/kubernetes/scheduler.conf --leader-elect<span class="o">=</span><span class="nb">true</span>
-<span class="m">27704</span> ?        Sl     <span class="m">0</span>:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/0904a715c607d662900b1
-<span class="m">27744</span> ?        Ssl    <span class="m">0</span>:04  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>           <span class="se">\_</span> kube-controller-manager --enable-hostpath-provisioner<span class="o">=</span><span class="nb">true</span> --address<span class="o">=</span><span class="m">127</span>.0.0.1 --allocate-node-cidrs<span class="o">=</span><span class="nb">true</span> --authentication-kubeconfig<span class="o">=</span>/</code></pre></div>
-<p>This is because at each of the layers of abstraction, we are again still sharing the same linux kernel. So when I create containers leveraging something like docker in docker I am still making use of the same resources I would even if I were to run the docker command from the underlying node.</p>
-
+8a2e80860798        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</span>                 <span class="m">12</span> minutes ago      Up <span class="m">12</span> minutes                           k8s_POD_etcd-kind-control-plane_kube-system_a17306e4c3c6a492df6a1ccea459c458_0
+</code></pre></div><p>and from the underlying node we can the processes that are related to the containers.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"> <span class="m">2572</span> ?        Ssl    1:44 /usr/bin/dockerd --live-restore -H fd://
+ <span class="m">2655</span> ?        Ssl    1:40  <span class="se">\_</span> docker-containerd --config /var/run/docker/containerd/containerd.toml
+<span class="m">10669</span> ?        Sl     0:00  <span class="p">|</span>   <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/9f577280b62052d5caeecd7483e3283f01d3a
+<span class="m">10801</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>   <span class="se">\_</span> /sbin/init
+<span class="m">14598</span> ?        S&lt;s    0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="se">\_</span> /lib/systemd/systemd-journald
+<span class="m">14736</span> ?        Ssl    2:18  <span class="p">|</span>   <span class="p">|</span>       <span class="se">\_</span> /usr/bin/dockerd -H fd://
+<span class="m">14958</span> ?        Ssl    0:33  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> docker-containerd --config /var/run/docker/containerd/containerd.toml
+<span class="m">22752</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/8a2e8086079885ea914c5
+<span class="m">22816</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">22762</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/71d3e0cb6fe2f988842bb
+<span class="m">22852</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">22777</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/aa56021201fb02aa8d855
+<span class="m">22846</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">22795</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/b2dab14dc554cdcf40e13
+<span class="m">22881</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">23015</span> ?        Sl     0:03  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/37ce90751bb7b196243f1
+<span class="m">23061</span> ?        Ssl    4:41  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> etcd --advertise-client-urls<span class="o">=</span>https://172.17.0.6:2379 --cert-file<span class="o">=</span>/etc/kubernetes/pki/etcd/server.crt --client-cert-auth<span class="o">=</span><span class="nb">true</span> --data-dir
+<span class="m">23066</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/3b722fb72dd30e8b3e07f
+<span class="m">23126</span> ?        Ssl    5:30  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> kube-apiserver --authorization-mode<span class="o">=</span>Node,RBAC --advertise-address<span class="o">=</span>172.17.0.6 --allow-privileged<span class="o">=</span><span class="nb">true</span> --client-ca-file<span class="o">=</span>/etc/kubernetes/p
+<span class="m">24764</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/f8ccefbb6faf067876cf4
+<span class="m">24830</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">24779</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/57b9c22fa25a83e4c69ca
+<span class="m">24819</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /pause
+<span class="m">24895</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/036e0f373c0bcac56484c
+<span class="m">24921</span> ?        Ssl    0:18  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /usr/local/bin/kube-proxy --config<span class="o">=</span>/var/lib/kube-proxy/config.conf --hostname-override<span class="o">=</span>kind-control-plane
+<span class="m">26721</span> ?        Sl     0:04  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/adb83f623945215c3597a
+<span class="m">26746</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> /sbin/runsvdir -P /etc/service/enabled
+<span class="m">28040</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv bird6
+<span class="m">28242</span> ?        S      0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> bird6 -R -s /var/run/calico/bird6.ctl -d -c /etc/calico/confd/config/bird6.cfg
+<span class="m">28041</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv confd
+<span class="m">28047</span> ?        Sl     0:28  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> calico-node -confd
+<span class="m">28042</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv felix
+<span class="m">28044</span> ?        Sl     2:03  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> calico-node -felix
+<span class="m">28043</span> ?        Ss     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> runsv bird
+<span class="m">28245</span> ?        S      0:01  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>           <span class="se">\_</span> bird -R -s /var/run/calico/bird.ctl -d -c /etc/calico/confd/config/bird.cfg
+<span class="m">27663</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/cce01b13d1be8c0e434cb
+<span class="m">27701</span> ?        Ssl    1:19  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="p">|</span>   <span class="se">\_</span> kube-scheduler --address<span class="o">=</span>127.0.0.1 --kubeconfig<span class="o">=</span>/etc/kubernetes/scheduler.conf --leader-elect<span class="o">=</span><span class="nb">true</span>
+<span class="m">27704</span> ?        Sl     0:00  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>       <span class="se">\_</span> docker-containerd-shim -namespace moby -workdir /var/lib/docker/containerd/daemon/io.containerd.runtime.v1.linux/moby/0904a715c607d662900b1
+<span class="m">27744</span> ?        Ssl    0:04  <span class="p">|</span>   <span class="p">|</span>       <span class="p">|</span>           <span class="se">\_</span> kube-controller-manager --enable-hostpath-provisioner<span class="o">=</span><span class="nb">true</span> --address<span class="o">=</span>127.0.0.1 --allocate-node-cidrs<span class="o">=</span><span class="nb">true</span> --authentication-kubeconfig<span class="o">=</span>/
+</code></pre></div><p>This is because at each of the layers of abstraction, we are again still sharing the same linux kernel. So when I create containers leveraging something like docker in docker I am still making use of the same resources I would even if I were to run the docker command from the underlying node.</p>
 <p>Put another way the docker daemon and all it&rsquo;s dependencies is running as an application inside the docker container I started. It&rsquo;s not mounting in the docker socket or any of that just making use of docker and the linux namespaces available to it.</p>
-
 <p>Thanks!</p>
 ]]></content>
 		</item>
@@ -721,33 +838,23 @@ aa56021201fb        k8s.gcr.io/pause:3.1   <span class="s2">&#34;/pause&#34;</sp
 			<pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
 			
 			<guid>https://mauilion.dev/posts/etcdclient/</guid>
-			<description>&lt;p&gt;In this post I am going to discuss &lt;a href=&#34;https://git.io/etcdclient.yaml&#34; rel=&#34;nofollow noreferrer&#34; target=&#34;_blank&#34;&gt;git.io/etcdclient.yaml&lt;/a&gt; and why it&amp;rsquo;s neat!&lt;/p&gt;</description>
-			<content type="html"><![CDATA[<p>In this post I am going to discuss <a href="https://git.io/etcdclient.yaml" rel="nofollow noreferrer" target="_blank">git.io/etcdclient.yaml</a> and why it&rsquo;s neat!</p>
-
+			<description>&lt;p&gt;In this post I am going to discuss &lt;a href=&#34;https://git.io/etcdclient.yaml&#34;&gt;git.io/etcdclient.yaml&lt;/a&gt; and why it&amp;rsquo;s neat!&lt;/p&gt;</description>
+			<content type="html"><![CDATA[<p>In this post I am going to discuss <a href="https://git.io/etcdclient.yaml">git.io/etcdclient.yaml</a> and why it&rsquo;s neat!</p>
 <p>When putting together content for a series of blog posts that I am doing around etcd recovery and failure scenarios, I realized that I was configuring the etcdclient to interact with the etcd cluster that kubeadm stands up.</p>
-
 <p>I wanted to create a static pod that would sit on the same node as the static pod that operates the etcd server so that I can use it to troubleshoot the etcd cluster that kubeadm is bringing up.</p>
-
-<p><a href="https://git.io/etcdclient.yaml" rel="nofollow noreferrer" target="_blank">git.io/etcdclient.yaml</a> is an attempt to DRY (do not repeat yourself) work up.</p>
-
+<p><a href="https://git.io/etcdclient.yaml">git.io/etcdclient.yaml</a> is an attempt to DRY (do not repeat yourself) work up.</p>
 <p>It makes a set of assumptions.</p>
-
 <ol>
 <li>That etcd has been created by kubeadm as a <code>local etcd</code></li>
 <li>That we have well defined locations for certs on the underlying file system layed down by kubeadm.</li>
 <li>That etcd is listening on localhost and a node ip or for our purposes at the very least localhost.</li>
 </ol>
-
 <p>The static pod looks like:</p>
-
-<script type="application/javascript" src="//gist.github.com/mauilion/2bab4b00eb7a0ab4fca7023ae251e8ee.js"></script>
+<script type="application/javascript" src="https://gist.github.com/mauilion/2bab4b00eb7a0ab4fca7023ae251e8ee.js"></script>
 
 <p>The interesting bits are the env vars that configure etcdclient on your behalf.</p>
-
-<p>With etcd and etcdclient the arguments that you can pass at the cli are also <a href="https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/configuration.md" rel="nofollow noreferrer" target="_blank">exposed as environment variables</a>.</p>
-
+<p>With etcd and etcdclient the arguments that you can pass at the cli are also <a href="https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/configuration.md">exposed as environment variables</a>.</p>
 <p>Now to see it in action!</p>
-
 <p>
     <asciinema-player
         src="/casts/etcdclient.cast"

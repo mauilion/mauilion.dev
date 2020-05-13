@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>kubernetes on Duffie Cooley</title>
@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 08 May 2019 09:37:30 -0700</lastBuildDate>
+    <lastBuildDate>Sun, 10 May 2020 14:50:57 -0700</lastBuildDate>
     
 	<atom:link href="https://mauilion.dev/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kind Persistent Volumes</title>
+      <link>https://mauilion.dev/posts/kind-pvc/</link>
+      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/posts/kind-pvc/</guid>
+      <description>&lt;p&gt;Hey Frens! This week we are exploring portable persistent volumes in kind!
+This is a pretty neat and funky trick!&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Using Kind to test a pr for Kubernetes.</title>

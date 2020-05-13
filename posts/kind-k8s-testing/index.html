@@ -7,34 +7,28 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="theme-color" content="#ababab">
 	<meta name="msapplication-TileColor" content="#ababab">
-
 <meta itemprop="name" content="Using Kind to test a pr for Kubernetes.">
 <meta itemprop="description" content="Setup I am looking to validate a set of changes produced by this PR.
 https://github.com/kubernetes/kubernetes/pull/77523
 In this post I want to show a few things.
  setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prerequisites There is a pretty handy tool called gimme put out by the travis-ci folks.">
-
-
 <meta itemprop="datePublished" content="2019-05-08T09:37:30-07:00" />
 <meta itemprop="dateModified" content="2019-05-08T09:37:30-07:00" />
-<meta itemprop="wordCount" content="1455">
-
-  <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/36015203">
-
+<meta itemprop="wordCount" content="1450">
+<meta itemprop="image" content="https://avatars1.githubusercontent.com/u/36015203">
 
 
-<meta itemprop="keywords" content="local,kubernetes,testing,kind," />
-<meta property="og:title" content="Using Kind to test a pr for Kubernetes." />
+
+<meta itemprop="keywords" content="local,kubernetes,testing,kind," /><meta property="og:title" content="Using Kind to test a pr for Kubernetes." />
 <meta property="og:description" content="Setup I am looking to validate a set of changes produced by this PR.
 https://github.com/kubernetes/kubernetes/pull/77523
 In this post I want to show a few things.
  setup a go environment. build kind checkout the k8s.io/kubernetes source bring up a cluster to repoduce the issue. build an image based on Andrews changes bring up a cluster with that image validate that the changes have the desired affect.  Prerequisites There is a pretty handy tool called gimme put out by the travis-ci folks." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://mauilion.dev/posts/kind-k8s-testing/" />
-
 <meta property="og:image" content="https://avatars1.githubusercontent.com/u/36015203" />
-<meta property="article:published_time" content="2019-05-08T09:37:30-07:00"/>
-<meta property="article:modified_time" content="2019-05-08T09:37:30-07:00"/>
+<meta property="article:published_time" content="2019-05-08T09:37:30-07:00" />
+<meta property="article:modified_time" content="2019-05-08T09:37:30-07:00" />
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://avatars1.githubusercontent.com/u/36015203"/>
 
@@ -52,7 +46,7 @@ In this post I want to show a few things.
 	<link rel="shortcut icon" href="/favicon.ico">
 
 	<title>Using Kind to test a pr for Kubernetes.</title>
-	<link rel="stylesheet" href="https://mauilion.dev/css/style.min.c693329ce3bac2503f88115a4011a284a06d53e30f484562a37664dc4c5f0a74.css" integrity="sha256-xpMynOO6wlA/iBFaQBGihKBtU+MPSEVio3Zk3ExfCnQ=">
+	<link rel="stylesheet" href="https://mauilion.dev/css/style.min.8d137e32cd752710e46928daa817e0f4fca34d07262680887f5bd46761cc01b7.css" integrity="sha256-jRN+Ms11JxDkaSjaqBfg9PyjTQcmJoCIf1vUZ2HMAbc=">
   <style>.bg-img {background-image: url('https://avatars1.githubusercontent.com/u/36015203');}</style><link rel="stylesheet" type="text/css" href="https://mauilion.dev/css/asciinema-player.css" />
 	<link rel="stylesheet" href="https://mauilion.dev/css/gist.css">
 </head>
@@ -91,16 +85,10 @@ In this post I want to show a few things.
         <h1>Using Kind to test a pr for Kubernetes.</h1>
       </header>
       <div class="content">
-        
-
-<h2 id="setup">Setup<a href="#setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-
+        <h2 id="setup">Setup<a href="#setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>I am looking to validate a set of changes produced by this PR.</p>
-
-<p><a href="https://github.com/kubernetes/kubernetes/pull/77523" rel="nofollow noreferrer" target="_blank">https://github.com/kubernetes/kubernetes/pull/77523</a></p>
-
+<p><a href="https://github.com/kubernetes/kubernetes/pull/77523">https://github.com/kubernetes/kubernetes/pull/77523</a></p>
 <p>In this post I want to show a few things.</p>
-
 <ol>
 <li>setup a go environment.</li>
 <li>build kind</li>
@@ -110,25 +98,15 @@ In this post I want to show a few things.
 <li>bring up a cluster with that image</li>
 <li>validate that the changes have the desired affect.</li>
 </ol>
-
 <h3 id="prerequisites">Prerequisites<a href="#prerequisites" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
 <p>There is a pretty handy tool called <code>gimme</code> put out by the travis-ci folks.</p>
-
 <p>This in my opinion is the &ldquo;best&rdquo; way to setup a go environment.</p>
-
-<p>Read more about it <a href="https://github.com/travis-ci/gimme" rel="nofollow noreferrer" target="_blank">here</a></p>
-
-<p>For this setup I am going to leverage <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> to configure go.</p>
-
-<p>We need a system that has <a href="https://github.com/travis-ci/gimme#installation--usage" rel="nofollow noreferrer" target="_blank">gimme</a> and <a href="https://direnv.net/" rel="nofollow noreferrer" target="_blank">direnv</a> installed.</p>
-
+<p>Read more about it <a href="https://github.com/travis-ci/gimme">here</a></p>
+<p>For this setup I am going to leverage <a href="https://direnv.net/">direnv</a> to configure go.</p>
+<p>We need a system that has <a href="https://github.com/travis-ci/gimme#installation--usage">gimme</a> and <a href="https://direnv.net/">direnv</a> installed.</p>
 <p>I will refer you to the instructions in the above links to get this stuff setup in your environment :)</p>
-
-<h3 id="let-s-get-started-with-go">Let&rsquo;s get started with go!<a href="#let-s-get-started-with-go" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
+<h3 id="lets-get-started-with-go">Let&rsquo;s get started with go!<a href="#lets-get-started-with-go" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>For this next bit I have created a repo you can checkout and make use of.</p>
-
 <p>
     <asciinema-player
         src="/casts/k8dev-go.cast"
@@ -149,12 +127,9 @@ In this post I want to show a few things.
         
     ></asciinema-player>
 </p>
-
-<p>In the cast you can see us checking out <a href="https://github.com/mauilion/k8s-dev" rel="nofollow noreferrer" target="_blank">mauilion/k8s-dev</a>
+<p>In the cast you can see us checking out <a href="https://github.com/mauilion/k8s-dev">mauilion/k8s-dev</a>
 Then we move into the directory and use gimme to configure go via direnv.</p>
-
 <p>We then edit the <code>.envrc</code> file.</p>
-
 <p>I want to take a second to explain why.</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="nb">unset</span> GOOS<span class="p">;</span>
 <span class="nb">unset</span> GOARCH<span class="p">;</span>
@@ -162,36 +137,24 @@ Then we move into the directory and use gimme to configure go via direnv.</p>
 <span class="nb">export</span> <span class="nv">GOPATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span>
 <span class="nb">export</span> <span class="nv">GOROOT</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/versions/go1.12.5.linux.amd64&#39;</span><span class="p">;</span>
 <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">GOPATH</span><span class="si">}</span><span class="s2">/bin:/home/dcooley/.gimme/versions/go1.12.5.linux.amd64/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">;</span>
-go version &gt;<span class="p">&amp;</span><span class="m">2</span><span class="p">;</span>
+go version &gt;<span class="p">&amp;</span>2<span class="p">;</span>
 
-<span class="nb">export</span> <span class="nv">GIMME_ENV</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/envs/go1.12.5.linux.amd64.env&#39;</span><span class="p">;</span></code></pre></div>
-<p>I added the <code>GOPATH</code> variable to ensure that when invoked go considers <code>/home/dcooley/k8s-dev</code> the path for go. This is how we can be sure that things like <code>go get -d k8s.io/kubernetes sigs.k8s.io/kind</code> will pull the src into that directory.
+<span class="nb">export</span> <span class="nv">GIMME_ENV</span><span class="o">=</span><span class="s1">&#39;/home/dcooley/.gimme/envs/go1.12.5.linux.amd64.env&#39;</span><span class="p">;</span>
+
+</code></pre></div><p>I added the <code>GOPATH</code> variable to ensure that when invoked go considers <code>/home/dcooley/k8s-dev</code> the path for go. This is how we can be sure that things like <code>go get -d k8s.io/kubernetes sigs.k8s.io/kind</code> will pull the src into that directory.
 This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the location of your checkout of <code>k8s.io/kubernetes</code> as part of the <code>kind build node-image</code> step it will follow the defined <code>GOPATH</code>.</p>
-
 <p>I am also prepending <code>${GOPATH}/bin</code> to the <code>${PATH}</code> variable. So that when we build <code>kind</code>. The <code>kind</code> binary will be in our path. You can also just put <code>kind</code> i</p>
-
-<h3 id="let-s-build-our-kind-node-images">Let&rsquo;s build our kind node-images<a href="#let-s-build-our-kind-node-images" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
+<h3 id="lets-build-our-kind-node-images">Let&rsquo;s build our kind node-images<a href="#lets-build-our-kind-node-images" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Ok next up we need to build our images.</p>
-
 <p>Since we checked out <code>k8s.io/kubernetes</code> into <code>${GOPATH}/src/k8s.io/kubernetes</code> we can just run <code>kind build node-image --image=mauilion/node:master</code></p>
-
 <p>This will create an image in my local docker image cache named <code>mauilion/node:master</code></p>
-
 <p>Once complete we also have to build the image based on the PR that Andrew provided.</p>
-
 <p>In the ticket we can see src of Andrews PR. <code>andrewsykim:fix-xlb-from-local</code></p>
-
 <p>So we need to grab that branch and build another image.</p>
-
 <p>The way I do this so as not to mess up the import paths and such is to move into <code>${GOPATH}/src/k8s.io/kubernetes</code> and run <code>git remote add andrewsykim git@github.com:andrewsykim\kubernetes</code></p>
-
 <p>Since Andrew is pushing his code to a branch <code>fix-xlb-from-local</code> of his fork <code>git@github.com:andrewsykim/kubernetes</code> of <code>k8s.io/kubernetes</code></p>
-
 <p>Once the remote is added I can do a <code>git fetch --all</code> and that will pull down all the known branches from all the remotes.</p>
-
 <p>Then we can switch to Andrews branch and build a new <code>kind node-image</code></p>
-
 <p>
     <asciinema-player
         src="/casts/k8dev-build.cast"
@@ -212,23 +175,14 @@ This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the loc
         
     ></asciinema-player>
 </p>
-
 <p>Before we move on. Let&rsquo;s talk about what&rsquo;s happening when we run <code>kind build node-image --image=mauilion/node:77523</code></p>
-
 <p><code>kind</code> is setup to build this image using a container build of kubernetes. This means that <code>kind</code> will &ldquo;detect&rdquo; where your local checkout of <code>k8s.io/kubernetes</code> is via your <code>${GOPATH}</code> then mount that into a container and build all the bits.</p>
-
 <p>the node image will contain all binaries and images needed to run kubernetes as produced from your local checkout of the source.</p>
-
 <p>This is a PRETTY DARN COOL thing!</p>
-
 <p>This means that I can easily setup an environment that will allow me to dig into and validate particular behavior.</p>
-
 <p>Also this is a way to iterate over changes to the codebase.</p>
-
 <p>Alright let&rsquo;s move on.</p>
-
-<h3 id="let-s-bring-up-our-clusters">Let&rsquo;s bring up our clusters<a href="#let-s-bring-up-our-clusters" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
+<h3 id="lets-bring-up-our-clusters">Let&rsquo;s bring up our clusters<a href="#lets-bring-up-our-clusters" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>In the repo I&rsquo;ve the following directory structure:</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">kind/
 ├── <span class="m">77523</span>              <span class="c1"># a repo with the bits for the 77523 clusters</span>
@@ -240,18 +194,16 @@ This is also important as when <code>kind</code> &ldquo;discovers&rdquo; the loc
     ├── .envrc
     ├── config
     ├── km-config.yaml
-    └── test.yaml</code></pre></div>
-<p>In the cast below you can see that we are moving into the directory for each cluster. If you take a look at the .envrc in the directory you can see we are using direnv to export <code>KUBECONFIG</code> and configure <code>kubectl</code>. This is also where the resources for this cluster are defined.
+    └── test.yaml
+</code></pre></div><p>In the cast below you can see that we are moving into the directory for each cluster. If you take a look at the .envrc in the directory you can see we are using direnv to export <code>KUBECONFIG</code> and configure <code>kubectl</code>. This is also where the resources for this cluster are defined.
 We then run something like:</p>
-
 <pre><code>kind create cluster --config config --name=master --image=mauilion/node:master
-</code></pre>
-
-<p>This does a few things.
-* It creates a cluster where the nodes will follow a naming convention we use in our statically defined test.yaml
-* It will use the node-image that we created in the <code>build</code> step.
-* It will use the config defined and create a cluster of 1 control plane node and 2 worker nodes.</p>
-
+</code></pre><p>This does a few things.</p>
+<ul>
+<li>It creates a cluster where the nodes will follow a naming convention we use in our statically defined test.yaml</li>
+<li>It will use the node-image that we created in the <code>build</code> step.</li>
+<li>It will use the config defined and create a cluster of 1 control plane node and 2 worker nodes.</li>
+</ul>
 <p>
     <asciinema-player
         src="/casts/k8dev-cluster-up.cast"
@@ -272,60 +224,39 @@ We then run something like:</p>
         
     ></asciinema-player>
 </p>
-
-<h3 id="now-for-the-fun-bit-let-s-validate">Now for the fun bit. Let&rsquo;s validate<a href="#now-for-the-fun-bit-let-s-validate" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
+<h3 id="now-for-the-fun-bit-lets-validate">Now for the fun bit. Let&rsquo;s validate<a href="#now-for-the-fun-bit-lets-validate" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>This PR is setup to fix a behavior in the way that <code>externalTrafficPolicy: Local</code> works.</p>
-
 <h4 id="the-problem">The problem:<a href="#the-problem" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
-
 <p>If we bringup a pod on one of two workers and expose that pod with a service of type LoadBalancer.
 And that service is configured with <code>externalTrafficPolicy: Local</code>.
 A pod that is configured with <code>hostNetwork: True</code> on the node where the pod is not will fail to connect to the external lb ip. That traffic will be dropped.</p>
-
 <h4 id="the-fix">The fix:<a href="#the-fix" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
-
 <p>To fix this behavior Andrew has implemented a another iptables rule.</p>
-
 <pre><code>-A KUBE-XLB-ECF5TUORC5E2ZCRD -s 10.8.0.0/14 -m comment --comment &quot;Redirect pods trying to reach external loadbalancer VIP to clusterIP&quot; -j KUBE-SVC-ECF5TUORC5E2ZCRD
-</code></pre>
-
-<p>This change enables traffic for a svc from a pod or from the host to be redirected to the service defined by kube-proxy.</p>
-
+</code></pre><p>This change enables traffic for a svc from a pod or from the host to be redirected to the service defined by kube-proxy.</p>
 <h4 id="our-testing-setup">Our testing setup:<a href="#our-testing-setup" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
-
-<p>We have brought up 2 clusters:
-* master
-* 77523</p>
-
+<p>We have brought up 2 clusters:</p>
+<ul>
+<li>master</li>
+<li>77523</li>
+</ul>
 <p>Into each of them we have deployed our test.yaml and metallb and a config for metallb.</p>
-
 <p>The test.yaml is a set of pods that are statically defined.
 By that I mean that each pod is scheduled to a specific node. We do this by configuring <code>nodeName</code> in the pod spec.</p>
-
 <p>There are 5 pods that we are deploying.
 <code>echo-77523-worker2</code>
 <code>netshoot-77523-worker</code>
 <code>netshoot-77523-worker2</code>
 <code>overlay-77523-worker</code>
 <code>overlay-77523-worker2</code></p>
-
-<p>The echo pod is using <a href="https://github.com/InAnimaTe/echo-server" rel="nofollow noreferrer" target="_blank">inanimate/echo-server</a> and from the name you can see that this will be deployed on worker2.</p>
-
+<p>The echo pod is using <a href="https://github.com/InAnimaTe/echo-server">inanimate/echo-server</a> and from the name you can see that this will be deployed on worker2.</p>
 <p>The netshoot pods are set with <code>hostNetwork: True</code> This means that if you exec into the pod you can see the ip stack of the underlying node.</p>
-
 <p>The overlay pods are the same except they are deployed as part of the overlay network and will be given a <code>pod ip</code></p>
-
-<p>The netshoot and overlay pods are both using <a href="https://github.com/nicolaka/netshoot" rel="nofollow noreferrer" target="_blank">nicolaka/netshoot</a></p>
-
+<p>The netshoot and overlay pods are both using <a href="https://github.com/nicolaka/netshoot">nicolaka/netshoot</a></p>
 <p>We also define a svc of type LoadBalancer in each of our clusters.</p>
-
 <p>for our <code>master</code> cluster we use <code>172.17.255.1:8080</code> and on the <code>77523</code> cluster it&rsquo;s <code>172.17.254.1:8080</code></p>
-
-<p>I am using metallb for this you can read more about metallb <a href="https://metallb.universe.tf/" rel="nofollow noreferrer" target="_blank">here</a>. More about how I use it with kind <a href="https://mauilion.dev/posts/kind-metallb/" rel="nofollow noreferrer" target="_blank">here</a></p>
-
-<h4 id="let-s-test-it">Let&rsquo;s test it!<a href="#let-s-test-it" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
-
+<p>I am using metallb for this you can read more about metallb <a href="https://metallb.universe.tf/">here</a>. More about how I use it with kind <a href="https://mauilion.dev/posts/kind-metallb/">here</a></p>
+<h4 id="lets-test-it">Let&rsquo;s test it!<a href="#lets-test-it" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 <p>From our understanding of the problem I expect that if exec into the <code>netshoot-master-worker</code> pod I will not be able to <code>curl 172.17.255.1:8080</code>
 <p>
     <asciinema-player
@@ -347,7 +278,6 @@ By that I mean that each pod is scheduled to a specific node. We do this by conf
         
     ></asciinema-player>
 </p></p>
-
 <p>if we try from the <code>77523</code> cluster we can see that it does work!
 <p>
     <asciinema-player
@@ -369,9 +299,7 @@ By that I mean that each pod is scheduled to a specific node. We do this by conf
         
     ></asciinema-player>
 </p></p>
-
 <p>Why does it work now tho?</p>
-
 <p>
     <asciinema-player
         src="/casts/k8dev-why.cast"
@@ -392,46 +320,29 @@ By that I mean that each pod is scheduled to a specific node. We do this by conf
         
     ></asciinema-player>
 </p>
-
 <p>In the master cluster we can chase down the XLB entry and it looks like this:</p>
-
 <pre><code>:KUBE-XLB-U52O5CQH2XXNVZ54 - [0:0]
 -A KUBE-FW-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: loadbalancer IP&quot; -j KUBE-XLB-U52O5CQH2XXNVZ54
 -A KUBE-NODEPORTS -p tcp -m comment --comment &quot;default/echo:&quot; -m tcp --dport 30012 -j KUBE-XLB-U52O5CQH2XXNVZ54
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: has no local endpoints&quot; -j KUBE-MARK-DROP
 
-</code></pre>
-
-<p>in the 77523 cluster:</p>
-
+</code></pre><p>in the 77523 cluster:</p>
 <pre><code>:KUBE-XLB-U52O5CQH2XXNVZ54 - [0:0]
 -A KUBE-FW-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: loadbalancer IP&quot; -j KUBE-XLB-U52O5CQH2XXNVZ54
 -A KUBE-NODEPORTS -p tcp -m comment --comment &quot;default/echo:&quot; -m tcp --dport 31972 -j KUBE-XLB-U52O5CQH2XXNVZ54
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;masquerade LOCAL traffic for default/echo: LB IP&quot; -m addrtype --src-type LOCAL -j KUBE-MARK-MASQ
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;route LOCAL traffic for default/echo: LB IP to service chain&quot; -m addrtype --src-type LOCAL -j KUBE-SVC-U52O5CQH2XXNVZ54
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;default/echo: has no local endpoints&quot; -j KUBE-MARK-DROP
-</code></pre>
-
-<p>The rules that Andrew&rsquo;s patch adds are:</p>
-
+</code></pre><p>The rules that Andrew&rsquo;s patch adds are:</p>
 <pre><code>-A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;masquerade LOCAL traffic for default/echo: LB IP&quot; -m addrtype --src-type LOCAL -j KUBE-MARK-MASQ
 -A KUBE-XLB-U52O5CQH2XXNVZ54 -m comment --comment &quot;route LOCAL traffic for default/echo: LB IP to service chain&quot; -m addrtype --src-type LOCAL -j KUBE-SVC-U52O5CQH2XXNVZ54
-</code></pre>
-
-<p>And the comments make it pretty clear what&rsquo;s happening!</p>
-
+</code></pre><p>And the comments make it pretty clear what&rsquo;s happening!</p>
 <h3 id="wrap-up">Wrap up!<a href="#wrap-up" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
 <p>Let&rsquo;s make sure you wipe out those clusters.</p>
-
 <pre><code>kind delete cluster --name=master
 kind delete cluster --name=77523
-</code></pre>
-
-<p>Also consider running <code>docker system prune --all</code> and <code>docker volume prune</code> every so often to keep your dockers cache tidy :)</p>
-
-<p>shout-out to <a href="https://twitter.com/a_sykim" rel="nofollow noreferrer" target="_blank">@a_sykim</a> you should follow him on twitter he&rsquo;s great!</p>
-
+</code></pre><p>Also consider running <code>docker system prune --all</code> and <code>docker volume prune</code> every so often to keep your dockers cache tidy :)</p>
+<p>shout-out to <a href="https://twitter.com/a_sykim">@a_sykim</a> you should follow him on twitter he&rsquo;s great!</p>
 <p>Thanks!</p>
 
       </div>
@@ -440,7 +351,7 @@ kind delete cluster --name=77523
         <p>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://mauilion.dev/tags/local">local</a></span><span class="tag"><a href="https://mauilion.dev/tags/kubernetes">kubernetes</a></span><span class="tag"><a href="https://mauilion.dev/tags/testing">testing</a></span><span class="tag"><a href="https://mauilion.dev/tags/kind">kind</a></span>
         </p>
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1455 Words</p>
+        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1450 Words</p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2019-05-08 09:37 -0700</p>
       </footer>
 
@@ -468,9 +379,9 @@ text-align: center;
 </style>
 
 <span style="color: silver;">Share: </span><div id="share-buttons">
-<div class="twitter" title="Share this on Twitter" onclick="window.open('http://twitter.com/home?status=https:\/\/mauilion.dev\/\/posts\/kind-k8s-testing\/');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1684 408q-67 98-162 167 1 14 1 42 0 130-38 259.5t-115.5 248.5-184.5 210.5-258 146-323 54.5q-271 0-496-145 35 4 78 4 225 0 401-138-105-2-188-64.5t-114-159.5q33 5 61 5 43 0 85-11-112-23-185.5-111.5t-73.5-205.5v-4q68 38 146 41-66-44-105-115t-39-154q0-88 44-163 121 149 294.5 238.5t371.5 99.5q-8-38-8-74 0-134 94.5-228.5t228.5-94.5q140 0 236 102 109-21 205-78-37 115-142 178 93-10 186-50z"/></svg></div>
-<div class="linkedin" title="Share this on Linkedin" onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=https:\/\/mauilion.dev\/\/posts\/kind-k8s-testing\/&title=&summary=&source=');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M477 625v991h-330v-991h330zm21-306q1 73-50.5 122t-135.5 49h-2q-82 0-132-49t-50-122q0-74 51.5-122.5t134.5-48.5 133 48.5 51 122.5zm1166 729v568h-329v-530q0-105-40.5-164.5t-126.5-59.5q-63 0-105.5 34.5t-63.5 85.5q-11 30-11 81v553h-329q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5 114.5-15.5q171 0 275 113.5t104 332.5z"/></svg></div>
-<div class="mail" title="Share this through Email" onclick="window.open('mailto:?&body=https:\/\/mauilion.dev\/\/posts\/kind-k8s-testing\/');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"/></svg></div>
+<div class="twitter" title="Share this on Twitter" onclick="window.open('http://twitter.com/home?status=https:\/\/mauilion.dev\/https:\/\/mauilion.dev\/posts\/kind-k8s-testing\/');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1684 408q-67 98-162 167 1 14 1 42 0 130-38 259.5t-115.5 248.5-184.5 210.5-258 146-323 54.5q-271 0-496-145 35 4 78 4 225 0 401-138-105-2-188-64.5t-114-159.5q33 5 61 5 43 0 85-11-112-23-185.5-111.5t-73.5-205.5v-4q68 38 146 41-66-44-105-115t-39-154q0-88 44-163 121 149 294.5 238.5t371.5 99.5q-8-38-8-74 0-134 94.5-228.5t228.5-94.5q140 0 236 102 109-21 205-78-37 115-142 178 93-10 186-50z"/></svg></div>
+<div class="linkedin" title="Share this on Linkedin" onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=https:\/\/mauilion.dev\/https:\/\/mauilion.dev\/posts\/kind-k8s-testing\/&title=&summary=&source=');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M477 625v991h-330v-991h330zm21-306q1 73-50.5 122t-135.5 49h-2q-82 0-132-49t-50-122q0-74 51.5-122.5t134.5-48.5 133 48.5 51 122.5zm1166 729v568h-329v-530q0-105-40.5-164.5t-126.5-59.5q-63 0-105.5 34.5t-63.5 85.5q-11 30-11 81v553h-329q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5 114.5-15.5q171 0 275 113.5t104 332.5z"/></svg></div>
+<div class="mail" title="Share this through Email" onclick="window.open('mailto:?&body=https:\/\/mauilion.dev\/https:\/\/mauilion.dev\/posts\/kind-k8s-testing\/');"><svg viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"/></svg></div>
 </div>
 
 
@@ -478,29 +389,24 @@ text-align: center;
     <aside id="toc">
       <div class="toc-title">Table of Contents</div>
       <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#setup">Setup</a>
-<ul>
-<li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#let-s-get-started-with-go">Let&rsquo;s get started with go!</a></li>
-<li><a href="#let-s-build-our-kind-node-images">Let&rsquo;s build our kind node-images</a></li>
-<li><a href="#let-s-bring-up-our-clusters">Let&rsquo;s bring up our clusters</a></li>
-<li><a href="#now-for-the-fun-bit-let-s-validate">Now for the fun bit. Let&rsquo;s validate</a>
-<ul>
-<li><a href="#the-problem">The problem:</a></li>
-<li><a href="#the-fix">The fix:</a></li>
-<li><a href="#our-testing-setup">Our testing setup:</a></li>
-<li><a href="#let-s-test-it">Let&rsquo;s test it!</a></li>
-</ul></li>
-<li><a href="#wrap-up">Wrap up!</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#setup">Setup</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#lets-get-started-with-go">Let&rsquo;s get started with go!</a></li>
+        <li><a href="#lets-build-our-kind-node-images">Let&rsquo;s build our kind node-images</a></li>
+        <li><a href="#lets-bring-up-our-clusters">Let&rsquo;s bring up our clusters</a></li>
+        <li><a href="#now-for-the-fun-bit-lets-validate">Now for the fun bit. Let&rsquo;s validate</a></li>
+        <li><a href="#wrap-up">Wrap up!</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
     </aside>
     <div class="post-nav thin">
+      <a class="next-post" href="https://mauilion.dev/posts/kind-pvc/">
+        <span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;Newer</span><br><span>Kind Persistent Volumes</span>
+      </a>
       <a class="prev-post" href="https://mauilion.dev/posts/kind-metallb/">
         <span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Using MetalLb with Kind</span>
       </a>
@@ -530,7 +436,7 @@ text-align: center;
   </main>
 
 	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
-		<p>&copy; 2019 <a href="https://mauilion.dev/">Duffie Cooley</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>&copy; 2020 <a href="https://mauilion.dev/">Duffie Cooley</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
 		<p>
 			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://mauilion.dev/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
 		</p>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Duffie Cooley</title>
@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 08 May 2019 09:37:30 -0700</lastBuildDate>
+    <lastBuildDate>Sun, 10 May 2020 14:50:57 -0700</lastBuildDate>
     
 	<atom:link href="https://mauilion.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>kind</title>
       <link>https://mauilion.dev/tags/kind/</link>
-      <pubDate>Wed, 08 May 2019 09:37:30 -0700</pubDate>
+      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/kind/</guid>
       <description></description>
@@ -24,9 +24,27 @@
     <item>
       <title>kubernetes</title>
       <link>https://mauilion.dev/tags/kubernetes/</link>
-      <pubDate>Wed, 08 May 2019 09:37:30 -0700</pubDate>
+      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pvc</title>
+      <link>https://mauilion.dev/tags/pvc/</link>
+      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/tags/pvc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>storage</title>
+      <link>https://mauilion.dev/tags/storage/</link>
+      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/tags/storage/</guid>
       <description></description>
     </item>
     
@@ -81,24 +99,6 @@
       <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/debugging/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>etcd</title>
-      <link>https://mauilion.dev/tags/etcd/</link>
-      <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
-      
-      <guid>https://mauilion.dev/tags/etcd/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tools</title>
-      <link>https://mauilion.dev/tags/tools/</link>
-      <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
-      
-      <guid>https://mauilion.dev/tags/tools/</guid>
       <description></description>
     </item>
     
