@@ -12,7 +12,7 @@
 This is a pretty neat and funky trick!">
 <meta itemprop="datePublished" content="2020-05-10T14:50:57-07:00" />
 <meta itemprop="dateModified" content="2020-05-10T14:50:57-07:00" />
-<meta itemprop="wordCount" content="1039">
+<meta itemprop="wordCount" content="1018">
 <meta itemprop="image" content="https://images.unsplash.com/photo-1547815749-838c83787de2">
 
 
@@ -100,20 +100,15 @@ volume claim is available to my pod. This ensures that if I have to restart
 and my pod will always come back with access to the same data.</p>
 </li>
 <li>
+<p>restore volumes:
+I want to be able to bring up a kind cluster and regain access to a
+previously provisioned persistent volume claim.</p>
+</li>
+<li>
 <p>volume mobility:
 I want to be able to schedule my pod to multiple nodes and have it access
 the same persistent volume claim. This requires that the peristent volume
 be made available to all nodes.</p>
-</li>
-<li>
-<p>local data:
-I have a bunch of data locally that I want to expose to pods running in a
-kind cluster.</p>
-</li>
-<li>
-<p>restore volumes:
-I want to be able to bring up a kind cluster and regain access to a
-previously provisioned persistent volume claim.</p>
 </li>
 </ol>
 <h3 id="the-built-in-storage-provider">The built in storage provider<a href="#the-built-in-storage-provider" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
@@ -333,7 +328,7 @@ git.io/pvc-test.yaml.</p>
         <p>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://mauilion.dev/tags/kind">kind</a></span><span class="tag"><a href="https://mauilion.dev/tags/storage">storage</a></span><span class="tag"><a href="https://mauilion.dev/tags/pvc">pvc</a></span><span class="tag"><a href="https://mauilion.dev/tags/kubernetes">kubernetes</a></span>
         </p>
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1039 Words</p>
+        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1018 Words</p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-05-10 14:50 -0700</p>
       </footer>
 

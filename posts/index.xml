@@ -38,20 +38,15 @@ volume claim is available to my pod. This ensures that if I have to restart
 and my pod will always come back with access to the same data.</p>
 </li>
 <li>
+<p>restore volumes:
+I want to be able to bring up a kind cluster and regain access to a
+previously provisioned persistent volume claim.</p>
+</li>
+<li>
 <p>volume mobility:
 I want to be able to schedule my pod to multiple nodes and have it access
 the same persistent volume claim. This requires that the peristent volume
 be made available to all nodes.</p>
-</li>
-<li>
-<p>local data:
-I have a bunch of data locally that I want to expose to pods running in a
-kind cluster.</p>
-</li>
-<li>
-<p>restore volumes:
-I want to be able to bring up a kind cluster and regain access to a
-previously provisioned persistent volume claim.</p>
 </li>
 </ol>
 <h3 id="the-built-in-storage-provider">The built in storage provider</h3>
