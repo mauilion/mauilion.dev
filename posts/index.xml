@@ -54,7 +54,7 @@ $ wc -w 1342-0.txt
 </span></code></pre></div><p>Let&rsquo;s bring up the cluster!</p>
 <p>
     <asciinema-player
-        src="/casts/kind-PVc-localdata-up.cast"
+        src="/casts/kind-pvc-localdata-up.cast"
         cols="200"
         rows="35"
         
@@ -147,7 +147,7 @@ PVc-books
 </code></pre></div><p>And follow along!</p>
 <p>
     <asciinema-player
-        src="/casts/kind-PVc-localdata-git.cast"
+        src="/casts/kind-pvc-localdata-git.cast"
         cols="200"
         rows="35"
         
@@ -175,7 +175,7 @@ PVc-books
 </ul>
 <p>
     <asciinema-player
-        src="/casts/kind-PVc-localdata-hostpath.cast"
+        src="/casts/kind-pvc-localdata-hostpath.cast"
         cols="200"
         rows="35"
         
@@ -203,7 +203,7 @@ PVc-books
 </ul>
 <p>
     <asciinema-player
-        src="/casts/kind-PVc-localdata-PVc.cast"
+        src="/casts/kind-pvc-localdata-PVc.cast"
         cols="200"
         rows="35"
         
@@ -226,8 +226,8 @@ PVc-books
 specific Persistent Volume Claim?</p>
 <p>One of the most foolproof ways is to populate the claimRef with information that
 indicates where the PVC will be created.</p>
-<p>We do this in our example PV.yaml</p>
-<script type="application/javascript" src="https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82.js?file=PV.yaml"></script>
+<p>We do this in our example pv.yaml</p>
+<script type="application/javascript" src="https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82.js?file=pv.yaml"></script>
 
 <p>This way if you have multiple PVs you are &ldquo;restoring&rdquo; or &ldquo;loading into a
 cluster&rdquo; you can have some control over which PVC will attach to which PV.</p>
