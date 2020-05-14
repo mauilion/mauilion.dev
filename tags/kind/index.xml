@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 10 May 2020 14:50:57 -0700</lastBuildDate>
+    <lastBuildDate>Tue, 12 May 2020 21:09:00 -0700</lastBuildDate>
     
 	<atom:link href="https://mauilion.dev/tags/kind/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Accessing Local Data from inside Kind!</title>
+      <link>https://mauilion.dev/posts/kind-pvc-localdata/</link>
+      <pubDate>Tue, 12 May 2020 21:09:00 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/posts/kind-pvc-localdata/</guid>
+      <description>&lt;p&gt;Following on from the &lt;a href=&#34;../kind-PVc&#34;&gt;recent kind PVc&lt;/a&gt; post. In this post we
+will explore how to bring up a kind cluster and use it to access data that you
+have locally on your machine via Persistent Volume Claims.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Kind Persistent Volumes</title>

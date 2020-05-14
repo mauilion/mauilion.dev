@@ -7,15 +7,24 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 10 May 2020 14:50:57 -0700</lastBuildDate>
+    <lastBuildDate>Tue, 12 May 2020 21:09:00 -0700</lastBuildDate>
     
 	<atom:link href="https://mauilion.dev/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>datapool</title>
+      <link>https://mauilion.dev/tags/datapool/</link>
+      <pubDate>Tue, 12 May 2020 21:09:00 -0700</pubDate>
+      
+      <guid>https://mauilion.dev/tags/datapool/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>kind</title>
       <link>https://mauilion.dev/tags/kind/</link>
-      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+      <pubDate>Tue, 12 May 2020 21:09:00 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/kind/</guid>
       <description></description>
@@ -24,16 +33,16 @@
     <item>
       <title>kubernetes</title>
       <link>https://mauilion.dev/tags/kubernetes/</link>
-      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+      <pubDate>Tue, 12 May 2020 21:09:00 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/kubernetes/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>pvc</title>
+      <title>PVc</title>
       <link>https://mauilion.dev/tags/pvc/</link>
-      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+      <pubDate>Tue, 12 May 2020 21:09:00 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/pvc/</guid>
       <description></description>
@@ -42,7 +51,7 @@
     <item>
       <title>storage</title>
       <link>https://mauilion.dev/tags/storage/</link>
-      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
+      <pubDate>Tue, 12 May 2020 21:09:00 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/storage/</guid>
       <description></description>
@@ -90,15 +99,6 @@
       <pubDate>Wed, 10 Apr 2019 15:28:10 -0700</pubDate>
       
       <guid>https://mauilion.dev/tags/talks/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>debugging</title>
-      <link>https://mauilion.dev/tags/debugging/</link>
-      <pubDate>Mon, 18 Mar 2019 16:25:23 -0700</pubDate>
-      
-      <guid>https://mauilion.dev/tags/debugging/</guid>
       <description></description>
     </item>
     

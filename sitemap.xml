@@ -3,37 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://mauilion.dev/tags/kind/</loc>
-    <lastmod>2020-05-10T14:50:57-07:00</lastmod>
+    <loc>https://mauilion.dev/posts/kind-pvc-localdata/</loc>
+    <lastmod>2020-05-12T21:09:00-07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mauilion.dev/posts/kind-pvc/</loc>
-    <lastmod>2020-05-10T14:50:57-07:00</lastmod>
+    <loc>https://mauilion.dev/tags/datapool/</loc>
+    <lastmod>2020-05-12T21:09:00-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/tags/kind/</loc>
+    <lastmod>2020-05-12T21:09:00-07:00</lastmod>
   </url>
   
   <url>
     <loc>https://mauilion.dev/tags/kubernetes/</loc>
-    <lastmod>2020-05-10T14:50:57-07:00</lastmod>
+    <lastmod>2020-05-12T21:09:00-07:00</lastmod>
   </url>
   
   <url>
     <loc>https://mauilion.dev/posts/</loc>
-    <lastmod>2020-05-10T14:50:57-07:00</lastmod>
+    <lastmod>2020-05-12T21:09:00-07:00</lastmod>
   </url>
   
   <url>
     <loc>https://mauilion.dev/tags/pvc/</loc>
-    <lastmod>2020-05-10T14:50:57-07:00</lastmod>
+    <lastmod>2020-05-12T21:09:00-07:00</lastmod>
   </url>
   
   <url>
     <loc>https://mauilion.dev/tags/storage/</loc>
-    <lastmod>2020-05-10T14:50:57-07:00</lastmod>
+    <lastmod>2020-05-12T21:09:00-07:00</lastmod>
   </url>
   
   <url>
     <loc>https://mauilion.dev/tags/</loc>
+    <lastmod>2020-05-12T21:09:00-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mauilion.dev/posts/kind-pvc/</loc>
     <lastmod>2020-05-10T14:50:57-07:00</lastmod>
   </url>
   

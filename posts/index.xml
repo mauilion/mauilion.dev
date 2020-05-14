@@ -6,8 +6,242 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Sun, 10 May 2020 14:50:57 -0700</lastBuildDate>
+		<lastBuildDate>Tue, 12 May 2020 21:09:00 -0700</lastBuildDate>
 		<atom:link href="https://mauilion.dev/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Accessing Local Data from inside Kind!</title>
+			<link>https://mauilion.dev/posts/kind-pvc-localdata/</link>
+			<pubDate>Tue, 12 May 2020 21:09:00 -0700</pubDate>
+			
+			<guid>https://mauilion.dev/posts/kind-pvc-localdata/</guid>
+			<description>&lt;p&gt;Following on from the &lt;a href=&#34;../kind-PVc&#34;&gt;recent kind PVc&lt;/a&gt; post. In this post we
+will explore how to bring up a kind cluster and use it to access data that you
+have locally on your machine via Persistent Volume Claims.&lt;/p&gt;</description>
+			<content type="html"><![CDATA[<p>Following on from the <a href="../kind-PVc">recent kind PVc</a> post. In this post we
+will explore how to bring up a kind cluster and use it to access data that you
+have locally on your machine via Persistent Volume Claims.</p>
+<p>This gives us the ability to model pretty interesting deployments of
+applications that require access to a data pool!</p>
+<p>Let&rsquo;s get to it!</p>
+<h2 id="summary">Summary</h2>
+<p>For this article I am going to use a txt file of a book and we can do some
+simple word counting.</p>
+<p>For our book we are going to use <a href="https://www.gutenberg.org/files/1342/1342-0.txt">The Project Gutenberg EBook of Pride and
+Prejudice, by Jane Austen</a></p>
+<p>We are going to create a multi node kind cluster and access that txt file from pods
+running in our cluster!</p>
+<p>Let&rsquo;s make a directory locally that we will use to store our data</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ mkdir -p data/pride-and-prejudice
+$ <span class="nb">cd</span> data/pride-and-prejudice/
+$ curl -LO https://www.gutenberg.org/files/1342/1342-0.txt
+$ wc -w 1342-0.txt
+<span class="m">124707</span> data/pride-and-prejudice/1342-0.txt
+</code></pre></div><p>Now for a kind config that mounts our data into our worker nodes!</p>
+<p><code>kind-data.yaml</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Cluster<span class="w">
+</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>kind.x-k8s.io/v1alpha4<span class="w">
+</span><span class="w"></span><span class="k">nodes</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w"> </span>control-plane<span class="w">
+</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w">  </span>worker<span class="w">
+</span><span class="w">  </span><span class="k">extraMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">hostPath</span><span class="p">:</span><span class="w"> </span>./data<span class="w">
+</span><span class="w">    </span><span class="k">containerPath</span><span class="p">:</span><span class="w"> </span>/tmp/data<span class="w">
+</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w">  </span>worker<span class="w">
+</span><span class="w">  </span><span class="k">extraMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="k">hostPath</span><span class="p">:</span><span class="w"> </span>./data<span class="w">
+</span><span class="w">    </span><span class="k">containerPath</span><span class="p">:</span><span class="w"> </span>/tmp/data<span class="w">
+</span></code></pre></div><p>Let&rsquo;s bring up the cluster!</p>
+<p>
+    <asciinema-player
+        src="/casts/kind-PVc-localdata-up.cast"
+        cols="200"
+        rows="35"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+<h3 id="access-models">Access Models</h3>
+<p>There are a couple of different ways we can provide access to this data! In
+Kubernetes we have the ability to configure the pod with access to <code>hostPath</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ kubectl explain pod.spec.volumes.hostpath
+KIND:     Pod
+VERSION:  v1
+
+RESOURCE: hostPath &lt;Object&gt;
+
+DESCRIPTION:
+     HostPath represents a pre-existing file or directory on the host machine
+     that is directly exposed to the container. This is generally used <span class="k">for</span>
+     system agents or other privileged things that are allowed to see the host
+     machine. Most containers will NOT need this. More info:
+     https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+
+     Represents a host path mapped into a pod. Host path volumes <span class="k">do</span> not support
+     ownership management or SELinux relabeling.
+
+FIELDS:
+   path	&lt;string&gt; -required-
+     Path of the directory on the host. If the path is a symlink, it will follow
+     the link to the real path. More info:
+     https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+
+   <span class="nb">type</span>	&lt;string&gt;
+     Type <span class="k">for</span> HostPath Volume Defaults to <span class="s2">&#34;&#34;</span> More info:
+     https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+</code></pre></div><p>For LOTS of good reasons this pattern is not a good one. Allowing <code>hostPath</code> as
+a volume for pods amounts to giving complete access to the underlying node.</p>
+<p>A malicious or curious user of the cluster could mount the /var/run/docker.sock
+into their pod and have the ability to completely take over the underlying node.
+Since most nodes host workloads from many different applications this can
+compromise the security of your cluster pretty significantly!</p>
+<p>All that said we will demonstrate how this works.</p>
+<p>The other model is to provide access to the underlying <code>hostPath</code> as a defined
+persistent volume. This is better move because the person defining the PV has to
+have the ability to define the PV at the cluster level and requires elevated
+permissions.</p>
+<p>Quick reminder here that persistent volumes are defined at cluster scope but
+persistent volume claims are namespaced!</p>
+<p>If you are ever wondering what resources are namespaced and what aren&rsquo;t check
+this out!</p>
+<p>
+    <asciinema-player
+        src="/casts/kubectl-api-resources.cast"
+        cols="200"
+        rows="35"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+<p>So TL;DR do this with Persistent Volumes not with hostPath!</p>
+<h4 id="the-setup">The Setup!</h4>
+<p>I assume that you have already setup <a href="https://kind.sigs.k8s.io">kind</a> and all
+that comes with that.</p>
+<p>I&rsquo;ve made all the resources used in the following demonstrations available
+<a href="https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82">here</a></p>
+<p>You can fetch them with</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">git clone https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82
+PVc-books
+</code></pre></div><p>And follow along!</p>
+<p>
+    <asciinema-player
+        src="/casts/kind-PVc-localdata-git.cast"
+        cols="200"
+        rows="35"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+<h4 id="hostpath">hostPath</h4>
+<p>In this demo we will:</p>
+<ul>
+<li>configure a deployment to use hostPath</li>
+<li>bring up a pod and play with the data!</li>
+<li>show why hostpath is crazy town!</li>
+<li>cleanup</li>
+</ul>
+<p>
+    <asciinema-player
+        src="/casts/kind-PVc-localdata-hostpath.cast"
+        cols="200"
+        rows="35"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+<h4 id="persistent-volumes">Persistent Volumes</h4>
+<p>In this demo we will:</p>
+<ul>
+<li>define a Persistent Volume</li>
+<li>configure a deployment and a persistent volume claim</li>
+<li>bring up the deployment and play with the data!</li>
+<li>cleanup</li>
+</ul>
+<p>
+    <asciinema-player
+        src="/casts/kind-PVc-localdata-PVc.cast"
+        cols="200"
+        rows="35"
+        
+        preload="true"
+        
+        start-at="0"
+        speed="1"
+        
+        poster="npt:1:00"
+        
+        
+        
+        
+        
+        
+    ></asciinema-player>
+</p>
+<h4 id="persistent-volume-tricks">Persistent Volume Tricks!</h4>
+<p>Ever wondered how to ensure that a specific Persistent Volume will connect to a
+specific Persistent Volume Claim?</p>
+<p>One of the most foolproof ways is to populate the claimRef with information that
+indicates where the PVC will be created.</p>
+<p>We do this in our example PV.yaml</p>
+<script type="application/javascript" src="https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82.js?file=PV.yaml"></script>
+
+<p>This way if you have multiple PVs you are &ldquo;restoring&rdquo; or &ldquo;loading into a
+cluster&rdquo; you can have some control over which PVC will attach to which PV.</p>
+<p>Thanks!</p>
+<h3 id="in-closing">In Closing</h3>
+<p>Giving a consumer hostpath access via Persistent Volume is very much a more sane way to provide
+that access!</p>
+<ul>
+<li>They can&rsquo;t arbitrarily change the path to something else.</li>
+<li>Only someone with cluster level permission can define a Persistent Volume</li>
+</ul>
+<p>Thanks for checking this out! I hope that it was helpful. If you have questions
+or ideas about something you&rsquo;d like to see a post on hit me up on twitter!</p>]]></content>
+		</item>
 		
 		<item>
 			<title>Kind Persistent Volumes</title>

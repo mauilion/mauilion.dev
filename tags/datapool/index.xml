@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>storage on Duffie Cooley</title>
-    <link>https://mauilion.dev/tags/storage/</link>
-    <description>Recent content in storage on Duffie Cooley</description>
+    <title>datapool on Duffie Cooley</title>
+    <link>https://mauilion.dev/tags/datapool/</link>
+    <description>Recent content in datapool on Duffie Cooley</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Tue, 12 May 2020 21:09:00 -0700</lastBuildDate>
     
-	<atom:link href="https://mauilion.dev/tags/storage/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://mauilion.dev/tags/datapool/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -21,16 +21,6 @@
       <description>&lt;p&gt;Following on from the &lt;a href=&#34;../kind-PVc&#34;&gt;recent kind PVc&lt;/a&gt; post. In this post we
 will explore how to bring up a kind cluster and use it to access data that you
 have locally on your machine via Persistent Volume Claims.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Kind Persistent Volumes</title>
-      <link>https://mauilion.dev/posts/kind-pvc/</link>
-      <pubDate>Sun, 10 May 2020 14:50:57 -0700</pubDate>
-      
-      <guid>https://mauilion.dev/posts/kind-pvc/</guid>
-      <description>&lt;p&gt;Hey Frens! This week we are exploring portable persistent volumes in kind!
-This is a pretty neat and funky trick!&lt;/p&gt;</description>
     </item>
     
   </channel>
