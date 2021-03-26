@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 18 Mar 2019 16:23:27 -0700</lastBuildDate>
-    
-	<atom:link href="https://mauilion.dev/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 12 May 2020 21:09:00 -0700</lastBuildDate><atom:link href="https://mauilion.dev/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Accessing Local Data from inside Kind!</title>
       <link>https://mauilion.dev/posts/kind-pvc-localdata/</link>

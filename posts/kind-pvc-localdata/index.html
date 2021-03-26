@@ -18,7 +18,8 @@ have locally on your machine via Persistent Volume Claims.">
 
 
 
-<meta itemprop="keywords" content="kind,kubernetes,storage,datapool,PVc," /><meta property="og:title" content="Accessing Local Data from inside Kind!" />
+<meta itemprop="keywords" content="kind,kubernetes,storage,datapool,PVc," />
+<meta property="og:title" content="Accessing Local Data from inside Kind!" />
 <meta property="og:description" content="Following on from the recent kind PVc post. In this post we
 will explore how to bring up a kind cluster and use it to access data that you
 have locally on your machine via Persistent Volume Claims." />
@@ -103,18 +104,18 @@ $ wc -w 1342-0.txt
 <span class="m">124707</span> data/pride-and-prejudice/1342-0.txt
 </code></pre></div><p>Now for a kind config that mounts our data into our worker nodes!</p>
 <p><code>kind-data.yaml</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Cluster<span class="w">
-</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>kind.x-k8s.io/v1alpha4<span class="w">
-</span><span class="w"></span><span class="k">nodes</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w"> </span>control-plane<span class="w">
-</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w">  </span>worker<span class="w">
-</span><span class="w">  </span><span class="k">extraMounts</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="k">hostPath</span><span class="p">:</span><span class="w"> </span>./data<span class="w">
-</span><span class="w">    </span><span class="k">containerPath</span><span class="p">:</span><span class="w"> </span>/tmp/data<span class="w">
-</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w">  </span>worker<span class="w">
-</span><span class="w">  </span><span class="k">extraMounts</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="k">hostPath</span><span class="p">:</span><span class="w"> </span>./data<span class="w">
-</span><span class="w">    </span><span class="k">containerPath</span><span class="p">:</span><span class="w"> </span>/tmp/data<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Cluster</span><span class="w">
+</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">kind.x-k8s.io/v1alpha4</span><span class="w">
+</span><span class="w"></span><span class="nt">nodes</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l">control-plane</span><span class="w">
+</span><span class="w"></span>- <span class="nt">role</span><span class="p">:</span><span class="w">  </span><span class="l">worker</span><span class="w">
+</span><span class="w">  </span><span class="nt">extraMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">hostPath</span><span class="p">:</span><span class="w"> </span><span class="l">./data</span><span class="w">
+</span><span class="w">    </span><span class="nt">containerPath</span><span class="p">:</span><span class="w"> </span><span class="l">/tmp/data</span><span class="w">
+</span><span class="w"></span>- <span class="nt">role</span><span class="p">:</span><span class="w">  </span><span class="l">worker</span><span class="w">
+</span><span class="w">  </span><span class="nt">extraMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">hostPath</span><span class="p">:</span><span class="w"> </span><span class="l">./data</span><span class="w">
+</span><span class="w">    </span><span class="nt">containerPath</span><span class="p">:</span><span class="w"> </span><span class="l">/tmp/data</span><span class="w">
 </span></code></pre></div><p>Let&rsquo;s bring up the cluster!</p>
 <p>
     <asciinema-player
@@ -267,7 +268,7 @@ PVc-books
 </ul>
 <p>
     <asciinema-player
-        src="/casts/kind-pvc-localdata-PVc.cast"
+        src="/casts/kind-pvc-localdata-pvc.cast"
         cols="200"
         rows="35"
         
@@ -357,7 +358,7 @@ a2a_config.num_services = 4;
   </main>
 
 	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
-		<p>&copy; 2020 <a href="https://mauilion.dev/">Duffie Cooley</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>&copy; 2021 <a href="https://mauilion.dev/">Duffie Cooley</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
 		<p>
 			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://mauilion.dev/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
 		</p>

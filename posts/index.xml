@@ -39,18 +39,18 @@ $ wc -w 1342-0.txt
 <span class="m">124707</span> data/pride-and-prejudice/1342-0.txt
 </code></pre></div><p>Now for a kind config that mounts our data into our worker nodes!</p>
 <p><code>kind-data.yaml</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Cluster<span class="w">
-</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>kind.x-k8s.io/v1alpha4<span class="w">
-</span><span class="w"></span><span class="k">nodes</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w"> </span>control-plane<span class="w">
-</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w">  </span>worker<span class="w">
-</span><span class="w">  </span><span class="k">extraMounts</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="k">hostPath</span><span class="p">:</span><span class="w"> </span>./data<span class="w">
-</span><span class="w">    </span><span class="k">containerPath</span><span class="p">:</span><span class="w"> </span>/tmp/data<span class="w">
-</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w">  </span>worker<span class="w">
-</span><span class="w">  </span><span class="k">extraMounts</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- <span class="k">hostPath</span><span class="p">:</span><span class="w"> </span>./data<span class="w">
-</span><span class="w">    </span><span class="k">containerPath</span><span class="p">:</span><span class="w"> </span>/tmp/data<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Cluster</span><span class="w">
+</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">kind.x-k8s.io/v1alpha4</span><span class="w">
+</span><span class="w"></span><span class="nt">nodes</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l">control-plane</span><span class="w">
+</span><span class="w"></span>- <span class="nt">role</span><span class="p">:</span><span class="w">  </span><span class="l">worker</span><span class="w">
+</span><span class="w">  </span><span class="nt">extraMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">hostPath</span><span class="p">:</span><span class="w"> </span><span class="l">./data</span><span class="w">
+</span><span class="w">    </span><span class="nt">containerPath</span><span class="p">:</span><span class="w"> </span><span class="l">/tmp/data</span><span class="w">
+</span><span class="w"></span>- <span class="nt">role</span><span class="p">:</span><span class="w">  </span><span class="l">worker</span><span class="w">
+</span><span class="w">  </span><span class="nt">extraMounts</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span>- <span class="nt">hostPath</span><span class="p">:</span><span class="w"> </span><span class="l">./data</span><span class="w">
+</span><span class="w">    </span><span class="nt">containerPath</span><span class="p">:</span><span class="w"> </span><span class="l">/tmp/data</span><span class="w">
 </span></code></pre></div><p>Let&rsquo;s bring up the cluster!</p>
 <p>
     <asciinema-player
@@ -203,7 +203,7 @@ PVc-books
 </ul>
 <p>
     <asciinema-player
-        src="/casts/kind-pvc-localdata-PVc.cast"
+        src="/casts/kind-pvc-localdata-pvc.cast"
         cols="200"
         rows="35"
         
@@ -364,16 +364,16 @@ of things. We need to mount the directory that the storage provider will use to
 create persistent volumes so that we have the data to restore. We also need to
 backup the persistent volume resources so that we can reuse them on restart!</p>
 <p>The local-path-provisioner is configured via a <code>configmap</code> in the local-path-storage namespace. It looks looks like this!</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml">$<span class="w"> </span>kubectl<span class="w"> </span>describe<span class="w"> </span>configmaps<span class="w"> </span>-n<span class="w"> </span>local-path-storage<span class="w"> </span>local-path-config<span class="w"> 
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="l">$ kubectl describe configmaps -n local-path-storage local-path-config </span><span class="w">
 </span><span class="w">
-</span><span class="w"></span><span class="k">Name</span><span class="p">:</span><span class="w">         </span>local-path-config<span class="w">
-</span><span class="w"></span><span class="k">Namespace</span><span class="p">:</span><span class="w">    </span>local-path-storage<span class="w">
-</span><span class="w"></span><span class="k">Labels</span><span class="p">:</span><span class="w">       </span>&lt;none&gt;<span class="w">
-</span><span class="w"></span><span class="k">Annotations</span><span class="p">:</span><span class="w">  
-</span><span class="w"></span>Data<span class="w">
-</span><span class="w"></span>====<span class="w">
-</span><span class="w"></span><span class="k">config.json</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>----<span class="w">
+</span><span class="w"></span><span class="nt">Name</span><span class="p">:</span><span class="w">         </span><span class="l">local-path-config</span><span class="w">
+</span><span class="w"></span><span class="nt">Namespace</span><span class="p">:</span><span class="w">    </span><span class="l">local-path-storage</span><span class="w">
+</span><span class="w"></span><span class="nt">Labels</span><span class="p">:</span><span class="w">       </span><span class="l">&lt;none&gt;</span><span class="w">
+</span><span class="w"></span><span class="nt">Annotations</span><span class="p">:</span><span class="w">  
+</span><span class="w"></span><span class="l">Data</span><span class="w">
+</span><span class="w"></span><span class="l">====</span><span class="w">
+</span><span class="w"></span><span class="nt">config.json</span><span class="p">:</span><span class="w">
+</span><span class="w"></span><span class="nn">---</span>-<span class="w">
 </span><span class="w"></span>{<span class="w">
 </span><span class="w">        </span><span class="s2">&#34;nodePathMap&#34;</span><span class="p">:[</span><span class="w">
 </span><span class="w">        </span>{<span class="w">
@@ -382,8 +382,8 @@ backup the persistent volume resources so that we can reuse them on restart!</p>
 </span><span class="w">        </span>}<span class="w">
 </span><span class="w">        </span><span class="p">]</span><span class="w">
 </span><span class="w"></span>}<span class="w">
-</span><span class="w"></span><span class="k">Events</span><span class="p">:</span><span class="w">  </span>&lt;none<span class="sd">&gt;
-</span><span class="sd">
+</span><span class="w"></span><span class="nt">Events</span><span class="p">:</span><span class="w">  </span><span class="l">&lt;none&gt;</span><span class="w">
+</span><span class="w">
 </span></code></pre></div><p>This configuration means that on each node in the cluster the provisioner will
 use the /var/local-path-provisioner directory to provision new persistent
 volumes!</p>
@@ -438,13 +438,12 @@ can access it. We also need a manifest that will deploy and configure it.</p>
 <p>I&rsquo;ve already built and pushed the container to
 <a href="https://hub.docker.com/layers/mauilion/hostpath-provisioner/dev/images/sha256-cdab86923c5a3d5e389818d7c192ed4488f3d7a272c892432378d53b900c8dee">mauilion/hostpath-provisioner:dev</a></p>
 <p>The manifest I built for this example is below</p>
-<script type="application/javascript" src="https://gist.github.com/mauilion/1b5727f42d181f36bb934656fa50459a.js?file=hostpath.yaml"></script>
-
+<p>{{ gist mauilion 1b5727f42d181f36bb934656fa50459a &ldquo;hostpath.yaml&rdquo; }}</p>
 <p>Now to use this we are going to modify our kind cluster to override the shared
 mount and the &ldquo;default storageClass&rdquo; implementation that kind deploys.</p>
 <p>Here is a look at our new kind config</p>
-<script type="application/javascript" src="https://gist.github.com/mauilion/1b5727f42d181f36bb934656fa50459a.js?file=kind-hostpath-dynamic.yaml"></script>
-
+<p>{{ gist mauilion 1b5727f42d181f36bb934656fa50459a &ldquo;kind-hostpath-dynamic.yaml&rdquo;
+}}</p>
 <p>Note that the mount path has changed and we are overriding the
 &ldquo;/kind/manifests/default-storage.yaml&rdquo; file on the first control-plane node. We
 are doing that because by default kind will apply that manifest to configure
@@ -809,11 +808,11 @@ DESCRIPTION:
 <p>That said I haven&rsquo;t created a bgp router for my kind cluster so we wil use the l2-mode for this experiment.</p>
 <h3 id="lets-do-this-thing">Let&rsquo;s do this thing!</h3>
 <p>First let&rsquo;s bring up a 2 node kind cluster with the following config.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">kind</span><span class="p">:</span><span class="w"> </span>Cluster<span class="w">
-</span><span class="w"></span><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>kind.sigs.k8s.io/v1alpha3<span class="w">
-</span><span class="w"></span><span class="k">nodes</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w"> </span>control-plane<span class="w">
-</span><span class="w"></span>- <span class="k">role</span><span class="p">:</span><span class="w"> </span>worker<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Cluster</span><span class="w">
+</span><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">kind.sigs.k8s.io/v1alpha3</span><span class="w">
+</span><span class="w"></span><span class="nt">nodes</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l">control-plane</span><span class="w">
+</span><span class="w"></span>- <span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l">worker</span><span class="w">
 </span></code></pre></div><p>
     <asciinema-player
         src="/casts/km-bringup.cast"
@@ -931,18 +930,18 @@ DESCRIPTION:
 <p>Now if we look at our existing service we can see that the <code>EXTERNAL-IP</code> is still <code>pending</code></p>
 <p>This is because we haven&rsquo;t yet applied the config for metallb.</p>
 <p>Here is the config:</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">apiVersion</span><span class="p">:</span><span class="w"> </span>v1<span class="w">
-</span><span class="w"></span><span class="k">kind</span><span class="p">:</span><span class="w"> </span>ConfigMap<span class="w">
-</span><span class="w"></span><span class="k">metadata</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="k">namespace</span><span class="p">:</span><span class="w"> </span>metallb-system<span class="w">
-</span><span class="w">  </span><span class="k">name</span><span class="p">:</span><span class="w"> </span>config<span class="w">
-</span><span class="w"></span><span class="k">data</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="k">config</span><span class="p">:</span><span class="w"> </span><span class="sd">|
-</span><span class="sd">    address-pools:</span><span class="w">
-</span><span class="w">    </span>- <span class="k">name</span><span class="p">:</span><span class="w"> </span>default<span class="w">
-</span><span class="w">      </span><span class="k">protocol</span><span class="p">:</span><span class="w"> </span>layer2<span class="w">
-</span><span class="w">      </span><span class="k">addresses</span><span class="p">:</span><span class="w">
-</span><span class="w">      </span>- <span class="m">172.17.255.1-172.17.255.250</span><span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ConfigMap</span><span class="w">
+</span><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">metallb-system</span><span class="w">
+</span><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">config</span><span class="w">
+</span><span class="w"></span><span class="nt">data</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span><span class="sd">    address-pools:
+</span><span class="sd">    - name: default
+</span><span class="sd">      protocol: layer2
+</span><span class="sd">      addresses:
+</span><span class="sd">      - 172.17.255.1-172.17.255.250</span><span class="w">    
 </span></code></pre></div><p>You can apply this to your cluster with <code>kubectl apply -f https://git.io/km-config.yaml</code></p>
 <p>Let&rsquo;s see what happens when we apply this.</p>
 <p>
