@@ -438,12 +438,13 @@ can access it. We also need a manifest that will deploy and configure it.</p>
 <p>I&rsquo;ve already built and pushed the container to
 <a href="https://hub.docker.com/layers/mauilion/hostpath-provisioner/dev/images/sha256-cdab86923c5a3d5e389818d7c192ed4488f3d7a272c892432378d53b900c8dee">mauilion/hostpath-provisioner:dev</a></p>
 <p>The manifest I built for this example is below</p>
-<p>{{ gist mauilion 1b5727f42d181f36bb934656fa50459a &ldquo;hostpath.yaml&rdquo; }}</p>
+<script type="application/javascript" src="https://gist.github.com/mauilion/1b5727f42d181f36bb934656fa50459a.js?file=hostpath.yaml"></script>
+
 <p>Now to use this we are going to modify our kind cluster to override the shared
 mount and the &ldquo;default storageClass&rdquo; implementation that kind deploys.</p>
 <p>Here is a look at our new kind config</p>
-<p>{{ gist mauilion 1b5727f42d181f36bb934656fa50459a &ldquo;kind-hostpath-dynamic.yaml&rdquo;
-}}</p>
+<script type="application/javascript" src="https://gist.github.com/mauilion/1b5727f42d181f36bb934656fa50459a.js?file=kind-hostpath-dynamic.yaml"></script>
+
 <p>Note that the mount path has changed and we are overriding the
 &ldquo;/kind/manifests/default-storage.yaml&rdquo; file on the first control-plane node. We
 are doing that because by default kind will apply that manifest to configure
