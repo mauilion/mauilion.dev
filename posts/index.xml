@@ -15,10 +15,10 @@
 			<pubDate>Tue, 12 May 2020 21:09:00 -0700</pubDate>
 			
 			<guid>https://mauilion.dev/posts/kind-pvc-localdata/</guid>
-			<description>&lt;p&gt;Following on from the &lt;a href=&#34;../kind-PVc&#34;&gt;recent kind PVc&lt;/a&gt; post. In this post we
+			<description>&lt;p&gt;Following on from the &lt;a href=&#34;../kind-pvc&#34;&gt;recent kind pvc&lt;/a&gt; post. In this post we
 will explore how to bring up a kind cluster and use it to access data that you
 have locally on your machine via Persistent Volume Claims.&lt;/p&gt;</description>
-			<content type="html"><![CDATA[<p>Following on from the <a href="../kind-PVc">recent kind PVc</a> post. In this post we
+			<content type="html"><![CDATA[<p>Following on from the <a href="../kind-pvc">recent kind pvc</a> post. In this post we
 will explore how to bring up a kind cluster and use it to access data that you
 have locally on your machine via Persistent Volume Claims.</p>
 <p>This gives us the ability to model pretty interesting deployments of
@@ -108,8 +108,8 @@ Since most nodes host workloads from many different applications this can
 compromise the security of your cluster pretty significantly!</p>
 <p>All that said we will demonstrate how this works.</p>
 <p>The other model is to provide access to the underlying <code>hostPath</code> as a defined
-persistent volume. This is better move because the person defining the PV has to
-have the ability to define the PV at the cluster level and requires elevated
+persistent volume. This is better move because the person defining the pv has to
+have the ability to define the pv at the cluster level and requires elevated
 permissions.</p>
 <p>Quick reminder here that persistent volumes are defined at cluster scope but
 persistent volume claims are namespaced!</p>
@@ -143,7 +143,7 @@ that comes with that.</p>
 <a href="https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82">here</a></p>
 <p>You can fetch them with</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">git clone https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82
-PVc-books
+pvc-books
 </code></pre></div><p>And follow along!</p>
 <p>
     <asciinema-player
@@ -225,12 +225,12 @@ PVc-books
 <p>Ever wondered how to ensure that a specific Persistent Volume will connect to a
 specific Persistent Volume Claim?</p>
 <p>One of the most foolproof ways is to populate the claimRef with information that
-indicates where the PVC will be created.</p>
+indicates where the pvc will be created.</p>
 <p>We do this in our example pv.yaml</p>
 <script type="application/javascript" src="https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82.js?file=pv.yaml"></script>
 
-<p>This way if you have multiple PVs you are &ldquo;restoring&rdquo; or &ldquo;loading into a
-cluster&rdquo; you can have some control over which PVC will attach to which PV.</p>
+<p>This way if you have multiple pvs you are &ldquo;restoring&rdquo; or &ldquo;loading into a
+cluster&rdquo; you can have some control over which pvc will attach to which pv.</p>
 <p>Thanks!</p>
 <h3 id="in-closing">In Closing</h3>
 <p>Giving a consumer hostpath access via Persistent Volume is very much a more sane way to provide

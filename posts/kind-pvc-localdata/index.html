@@ -8,7 +8,7 @@
 	<meta name="theme-color" content="#ababab">
 	<meta name="msapplication-TileColor" content="#ababab">
 <meta itemprop="name" content="Accessing Local Data from inside Kind!">
-<meta itemprop="description" content="Following on from the recent kind PVc post. In this post we
+<meta itemprop="description" content="Following on from the recent kind pvc post. In this post we
 will explore how to bring up a kind cluster and use it to access data that you
 have locally on your machine via Persistent Volume Claims.">
 <meta itemprop="datePublished" content="2020-05-12T21:09:00-07:00" />
@@ -18,9 +18,9 @@ have locally on your machine via Persistent Volume Claims.">
 
 
 
-<meta itemprop="keywords" content="kind,kubernetes,storage,datapool,PVc," />
+<meta itemprop="keywords" content="kind,kubernetes,storage,datapool,pvc," />
 <meta property="og:title" content="Accessing Local Data from inside Kind!" />
-<meta property="og:description" content="Following on from the recent kind PVc post. In this post we
+<meta property="og:description" content="Following on from the recent kind pvc post. In this post we
 will explore how to bring up a kind cluster and use it to access data that you
 have locally on your machine via Persistent Volume Claims." />
 <meta property="og:type" content="article" />
@@ -32,7 +32,7 @@ have locally on your machine via Persistent Volume Claims." />
 <meta name="twitter:image" content="https://images.unsplash.com/photo-1511285095685-c5c53c7e8c60"/>
 
 <meta name="twitter:title" content="Accessing Local Data from inside Kind!"/>
-<meta name="twitter:description" content="Following on from the recent kind PVc post. In this post we
+<meta name="twitter:description" content="Following on from the recent kind pvc post. In this post we
 will explore how to bring up a kind cluster and use it to access data that you
 have locally on your machine via Persistent Volume Claims."/>
 
@@ -83,7 +83,7 @@ have locally on your machine via Persistent Volume Claims."/>
         <h1>Accessing Local Data from inside Kind!</h1>
       </header>
       <div class="content">
-        <p>Following on from the <a href="../kind-PVc">recent kind PVc</a> post. In this post we
+        <p>Following on from the <a href="../kind-pvc">recent kind pvc</a> post. In this post we
 will explore how to bring up a kind cluster and use it to access data that you
 have locally on your machine via Persistent Volume Claims.</p>
 <p>This gives us the ability to model pretty interesting deployments of
@@ -173,8 +173,8 @@ Since most nodes host workloads from many different applications this can
 compromise the security of your cluster pretty significantly!</p>
 <p>All that said we will demonstrate how this works.</p>
 <p>The other model is to provide access to the underlying <code>hostPath</code> as a defined
-persistent volume. This is better move because the person defining the PV has to
-have the ability to define the PV at the cluster level and requires elevated
+persistent volume. This is better move because the person defining the pv has to
+have the ability to define the pv at the cluster level and requires elevated
 permissions.</p>
 <p>Quick reminder here that persistent volumes are defined at cluster scope but
 persistent volume claims are namespaced!</p>
@@ -208,7 +208,7 @@ that comes with that.</p>
 <a href="https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82">here</a></p>
 <p>You can fetch them with</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">git clone https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82
-PVc-books
+pvc-books
 </code></pre></div><p>And follow along!</p>
 <p>
     <asciinema-player
@@ -290,12 +290,12 @@ PVc-books
 <p>Ever wondered how to ensure that a specific Persistent Volume will connect to a
 specific Persistent Volume Claim?</p>
 <p>One of the most foolproof ways is to populate the claimRef with information that
-indicates where the PVC will be created.</p>
+indicates where the pvc will be created.</p>
 <p>We do this in our example pv.yaml</p>
 <script type="application/javascript" src="https://gist.github.com/mauilion/c40b161822598e5b1720d3b34487fb82.js?file=pv.yaml"></script>
 
-<p>This way if you have multiple PVs you are &ldquo;restoring&rdquo; or &ldquo;loading into a
-cluster&rdquo; you can have some control over which PVC will attach to which PV.</p>
+<p>This way if you have multiple pvs you are &ldquo;restoring&rdquo; or &ldquo;loading into a
+cluster&rdquo; you can have some control over which pvc will attach to which pv.</p>
 <p>Thanks!</p>
 <h3 id="in-closing">In Closing<a href="#in-closing" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Giving a consumer hostpath access via Persistent Volume is very much a more sane way to provide
@@ -310,7 +310,7 @@ or ideas about something you&rsquo;d like to see a post on hit me up on twitter!
       <hr class="post-end">
       <footer class="post-info">
         <p>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://mauilion.dev/tags/kind">kind</a></span><span class="tag"><a href="https://mauilion.dev/tags/kubernetes">kubernetes</a></span><span class="tag"><a href="https://mauilion.dev/tags/storage">storage</a></span><span class="tag"><a href="https://mauilion.dev/tags/datapool">datapool</a></span><span class="tag"><a href="https://mauilion.dev/tags/pvc">PVc</a></span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://mauilion.dev/tags/kind">kind</a></span><span class="tag"><a href="https://mauilion.dev/tags/kubernetes">kubernetes</a></span><span class="tag"><a href="https://mauilion.dev/tags/storage">storage</a></span><span class="tag"><a href="https://mauilion.dev/tags/datapool">datapool</a></span><span class="tag"><a href="https://mauilion.dev/tags/pvc">pvc</a></span>
         </p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>740 Words</p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-05-12 21:09 -0700</p>
